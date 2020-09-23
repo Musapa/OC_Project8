@@ -1,7 +1,5 @@
 rootProject.name = 'OC_project8'
 
-include 'groovy-library'
-
 include 'web'
 include 'gps'
 include 'rewards'

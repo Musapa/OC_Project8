@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <projectDescription>
-	<name>OC_project8</name>
-	<comment>Project OC_project_8 created by Buildship.</comment>
+	<name>web</name>
+	<comment>Project web created by Buildship.</comment>
 	<projects>
 	</projects>
 	<buildSpec>
@@ -17,6 +17,7 @@
 		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.eclipse.jdt.groovy.core.groovyNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
