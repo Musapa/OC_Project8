@@ -1,11 +1,6 @@
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+package gps.controller;
 
-import com.jsoniter.output.JsonStream;
-
-import gpsUtil.location.VisitedLocation;
-
+/*
 @RestController
 public class GpsController {
 
@@ -19,4 +14,4 @@ public class GpsController {
     	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
 		return JsonStream.serialize(visitedLocation.location);
     }
-}
+}*/

@@ -1,3 +1,5 @@
+package gps.service;
+/*
 import org.springframework.stereotype.Service;
 
 import gpsUtil.location.VisitedLocation;
@@ -13,4 +15,4 @@ public class GpsService {
 		return visitedLocation;
 	}
 	
-}
+}*/
