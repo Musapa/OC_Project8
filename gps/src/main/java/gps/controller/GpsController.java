@@ -19,7 +19,7 @@ public class GpsController {
 
 	@RequestMapping("/")
 	public String index() {
-		return "Return GpsController!";
+		return "Greetings from GpsController!";
 	}
 
 	@RequestMapping("/getLocation")
