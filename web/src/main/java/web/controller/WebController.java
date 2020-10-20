@@ -27,8 +27,8 @@ public class WebController {
 	}
 
 	@RequestMapping("/getLocation")
-	public String getLocation(@RequestParam (value = "user") User user) {
-		VisitedLocation visitedLocation = webService.getUserLocation(user);
+	public String getLocation(@RequestParam String userName) {
+		VisitedLocation visitedLocation = webService.getUserLocation(getUser(userName));
 		return JsonStream.serialize(visitedLocation.location);
 	}
 
@@ -76,8 +76,10 @@ public class WebController {
 	 * webService.getTripDeals(getUser(userName)); return
 	 * JsonStream.serialize(providers); }
 	 * 
-	 * private User getUser(String userName) { return webService.getUser(userName);
-	 * }
 	 */
+
+	private User getUser(String userName) {
+		return webService.getUser(userName);
+	}
 
 }
