@@ -1,15 +1,17 @@
 package gps.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.jsoniter.output.JsonStream;
 
 import gps.service.GpsService;
 import gpsUtil.location.VisitedLocation;
 import shared.user.User;
+import shared.user.UserDTO;
+import shared.user.VisitedLocationDTO;
 
 @RestController
 public class GpsController {
@@ -22,9 +24,13 @@ public class GpsController {
 		return "Greetings from GpsController!";
 	}
 
-	@RequestMapping("/getLocation")
-	public String getLocation(@RequestParam User user) {
+	@RequestMapping(value = "/getLocation", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+	public ResponseEntity<VisitedLocationDTO> getLocation(@RequestBody UserDTO userDTO) {
+		User user = new User(userDTO);
 		VisitedLocation visitedLocation = gpsService.getUserLocation(user);
-		return JsonStream.serialize(visitedLocation.location);
+		return ResponseEntity.ok().body(new VisitedLocationDTO(visitedLocation));
 	}
+	
+	// getAllLocations()
+	// need userDatabase on gpsService
 }

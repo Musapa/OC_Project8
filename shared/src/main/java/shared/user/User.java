@@ -25,6 +25,10 @@ public class User {
 		this.phoneNumber = phoneNumber;
 		this.emailAddress = emailAddress;
 	}
+	
+	public User(UserDTO user) {
+		this(user.getUserId(), user.getUserName(), user.getPhoneNumber(), user.getEmailAddress());
+	}
 
 	public UUID getUserId() {
 		return userId;
