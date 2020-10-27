@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
@@ -19,6 +22,17 @@ public class User {
 	private UserPreferences userPreferences = new UserPreferences();
 	private List<Provider> tripDeals = new ArrayList<>();
 
+	// Lock for thread synchronization for user's visitedLocation list
+	ReadWriteLock visitedLocationLock = new ReentrantReadWriteLock();
+	Lock readVisitedLocationLock = visitedLocationLock.readLock();
+	Lock writeVisitedLocationLock = visitedLocationLock.writeLock();
+
+	// Lock for thread synchronization for user's reward list
+	ReadWriteLock userRewardLock = new ReentrantReadWriteLock();
+	Lock readUserRewardLock = visitedLocationLock.readLock();
+	Lock writeUserRewardLock = visitedLocationLock.writeLock();	
+	
+	
 	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {
 		this.userId = userId;
 		this.userName = userName;

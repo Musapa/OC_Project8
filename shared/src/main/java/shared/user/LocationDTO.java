@@ -1,7 +1,5 @@
 package shared.user;
 
-import java.util.Date;
-
 public class LocationDTO {
 	
 	private double latitude;

@@ -13,16 +13,19 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Component;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import shared.helper.InternalTestHelper;
 
-public class UserDatabase {
+@Component
+public class UserRepository {
 
-	private Logger logger = LoggerFactory.getLogger(UserDatabase.class);
+	private Logger logger = LoggerFactory.getLogger(UserRepository.class);
+	private static final String tripPricerApiKey = "test-server-api-key";
 
-	public UserDatabase() {
+	public UserRepository() {
 		initializeInternalUsers();
 	}
 
@@ -30,14 +33,14 @@ public class UserDatabase {
 		return internalUserMap.get(userName);
 	}
 
-	public List<User> getAllUsers() {
-		return internalUserMap.values().stream().collect(Collectors.toList());
-	}
-
 	public void addUser(User user) {
 		if (!internalUserMap.containsKey(user.getUserName())) {
 			internalUserMap.put(user.getUserName(), user);
 		}
+	}
+	
+	public List<User> getAllUsers() {
+		return internalUserMap.values().stream().collect(Collectors.toList());
 	}
 
 	/**********************************************************************************
@@ -45,7 +48,6 @@ public class UserDatabase {
 	 * Methods Below: For Internal Testing
 	 * 
 	 **********************************************************************************/
-	private static final String tripPricerApiKey = "test-server-api-key";
 	// Database connection will be used for external users, but for testing purposes
 	// internal users are provided and stored in memory
 
@@ -87,5 +89,9 @@ public class UserDatabase {
 		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
 		return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 	}
+
+    public Map<String, User> getInternalUserMap() {
+        return internalUserMap;
+    }
 
 }

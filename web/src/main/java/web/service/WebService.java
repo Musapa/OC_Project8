@@ -1,11 +1,7 @@
 package web.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -18,15 +14,14 @@ import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import shared.user.User;
 import shared.user.UserDTO;
-import shared.user.UserDatabase;
+import shared.user.UserRepository;
 import shared.user.VisitedLocationDTO;
 import web.controller.WebController;
 
 @Service
 public class WebService {
 
-	@Autowired
-	UserDatabase userDatabase;
+	private UserRepository userRepository;
 
 	public VisitedLocation getUserLocation(User user) throws Exception {
 		UserDTO userDTO = new UserDTO(user);
@@ -44,15 +39,17 @@ public class WebService {
 	}
 
 	public User getUser(String userName) {
-		return userDatabase.getUser(userName);
+		return userRepository.getUser(userName);
 	}
 
 	public List<User> getAllUsers() {
-		return userDatabase.getAllUsers();
+		return userRepository.getAllUsers();
 	}
 
 	public void addUser(User user) {
-		userDatabase.addUser(user);
+		userRepository.addUser(user);
 	}
+
+
 
 }
