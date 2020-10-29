@@ -2,12 +2,13 @@ package com.openclassrooms.ocproject8.gps.service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.ocproject8.shared.user.User;
-import com.openclassrooms.ocproject8.shared.user.UserService;
+import com.openclassrooms.ocproject8.shared.user.domain.User;
+import com.openclassrooms.ocproject8.shared.user.service.UserService;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Location;
@@ -21,6 +22,10 @@ public class GpsService {
 	
 	private final GpsUtil gpsUtil = new GpsUtil();
 
+	public GpsService() {
+		calculateAllUserLocations();
+	}
+	
 	public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
 				: trackUserLocation(user);
@@ -42,5 +47,14 @@ public class GpsService {
 		}
 		return allUsersLocations;
 	}
+
+	public void calculateAllUserLocations() {
+		//TODO read users from database and calculate their locations
+		//IntStream.range(0, 3).forEach(i -> {
+		//	user.addToVisitedLocations(new VisitedLocation(user.getUserId(),
+		//			new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
+		//});
+	}
+
 
 }

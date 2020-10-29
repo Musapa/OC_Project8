@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.jsoniter.output.JsonStream;
-import com.openclassrooms.ocproject8.shared.user.User;
+import com.openclassrooms.ocproject8.shared.user.domain.User;
 import com.openclassrooms.ocproject8.web.service.WebService;
 
 import gpsUtil.location.VisitedLocation;

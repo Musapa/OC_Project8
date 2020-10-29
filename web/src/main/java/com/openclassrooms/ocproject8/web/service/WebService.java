@@ -10,10 +10,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.openclassrooms.ocproject8.shared.user.User;
-import com.openclassrooms.ocproject8.shared.user.UserDTO;
-import com.openclassrooms.ocproject8.shared.user.UserRepository;
-import com.openclassrooms.ocproject8.shared.user.VisitedLocationDTO;
+import com.openclassrooms.ocproject8.shared.user.domain.User;
+import com.openclassrooms.ocproject8.shared.user.domain.UserEntity;
+import com.openclassrooms.ocproject8.shared.user.domain.VisitedLocationEntity;
+import com.openclassrooms.ocproject8.shared.user.repository.UserRepository;
 import com.openclassrooms.ocproject8.web.controller.WebController;
 
 import gpsUtil.location.Location;
@@ -25,15 +25,15 @@ public class WebService {
 	private UserRepository userRepository;
 
 	public VisitedLocation getUserLocation(User user) throws Exception {
-		UserDTO userDTO = new UserDTO(user);
+		UserEntity userDTO = new UserEntity(user);
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 
-		HttpEntity<UserDTO> request = new HttpEntity<UserDTO>(userDTO, headers);
-		ResponseEntity<VisitedLocationDTO> response = restTemplate.exchange(WebController.GPSURL + "/getLocation",
-				HttpMethod.POST, request, VisitedLocationDTO.class);
-		VisitedLocationDTO visitedLocationDTO = response.getBody();
+		HttpEntity<UserEntity> request = new HttpEntity<UserEntity>(userDTO, headers);
+		ResponseEntity<VisitedLocationEntity> response = restTemplate.exchange(WebController.GPSURL + "/getLocation",
+				HttpMethod.POST, request, VisitedLocationEntity.class);
+		VisitedLocationEntity visitedLocationDTO = response.getBody();
 		Location location = new Location(visitedLocationDTO.getLocationDTO().getLatitude(),
 				visitedLocationDTO.getLocationDTO().getLongitude());
 		return new VisitedLocation(visitedLocationDTO.getUserId(), location, visitedLocationDTO.getTimeVisited());
@@ -51,6 +51,10 @@ public class WebService {
 		userRepository.addUser(user);
 	}
 
-
+	//TODO inistialise database (private) 
+	
+	
+	//TODO this will be instanciated by in web service
+	 
 
 }

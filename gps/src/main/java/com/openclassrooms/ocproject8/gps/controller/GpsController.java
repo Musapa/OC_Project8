@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.gps.service.GpsService;
-import com.openclassrooms.ocproject8.shared.user.User;
-import com.openclassrooms.ocproject8.shared.user.UserDTO;
-import com.openclassrooms.ocproject8.shared.user.VisitedLocationDTO;
+import com.openclassrooms.ocproject8.shared.user.domain.User;
+import com.openclassrooms.ocproject8.shared.user.domain.UserEntity;
+import com.openclassrooms.ocproject8.shared.user.domain.VisitedLocationEntity;
 
 import gpsUtil.location.VisitedLocation;
 
@@ -27,10 +27,10 @@ public class GpsController {
 	}
 	
 	@RequestMapping(value = "/getLocation", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-	public ResponseEntity<VisitedLocationDTO> getLocation(@RequestBody UserDTO userDTO) {
+	public ResponseEntity<VisitedLocationEntity> getLocation(@RequestBody UserEntity userDTO) {
 		User user = new User(userDTO);
 		VisitedLocation visitedLocation = gpsService.getUserLocation(user);
-		return ResponseEntity.ok().body(new VisitedLocationDTO(visitedLocation));
+		return ResponseEntity.ok().body(new VisitedLocationEntity(visitedLocation));
 	}
 	
     @RequestMapping("/all-current-locations")
