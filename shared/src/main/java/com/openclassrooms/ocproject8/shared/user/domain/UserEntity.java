@@ -2,8 +2,18 @@ package com.openclassrooms.ocproject8.shared.user.domain;
 
 import java.util.UUID;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "users")
 public class UserEntity {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private final UUID userId;
 	private final String userName;
 	private String phoneNumber;
