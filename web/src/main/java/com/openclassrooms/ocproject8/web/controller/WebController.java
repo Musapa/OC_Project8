@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
 import com.jsoniter.output.JsonStream;
-import com.openclassrooms.ocproject8.shared.user.domain.User;
+import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.web.service.WebService;
 
 import gpsUtil.location.VisitedLocation;
@@ -28,7 +28,7 @@ public class WebController {
 
 	@RequestMapping("/getLocation")
 	public String getLocation(@RequestParam String userName) throws Exception {
-		VisitedLocation visitedLocation = webService.getUserLocation(getUser(userName));
+		VisitedLocation visitedLocation = webService.getUserLocation(userName);
 		return JsonStream.serialize(visitedLocation.location);
 	}
 
@@ -79,8 +79,8 @@ public class WebController {
 	 * 
 	 */
 
-	private User getUser(String userName) {
+	/*private User getUser(String userName) {
 		return webService.getUser(userName);
-	}
+	}*/
 
 }

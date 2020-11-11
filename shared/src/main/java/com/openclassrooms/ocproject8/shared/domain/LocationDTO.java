@@ -1,15 +1,15 @@
-package com.openclassrooms.ocproject8.shared.user.domain;
+package com.openclassrooms.ocproject8.shared.domain;
 
-public class LocationEntity {
+public class LocationDTO {
 	
 	private double latitude;
 	private double longitude;
 	
-	public LocationEntity() {
+	public LocationDTO() {
 		
 	}
 
-	public LocationEntity(double latitude, double longitude) {
+	public LocationDTO(double latitude, double longitude) {
 		this.latitude = latitude;
 		this.longitude = longitude;
 	}

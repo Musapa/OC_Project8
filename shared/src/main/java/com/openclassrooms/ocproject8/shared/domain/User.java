@@ -1,4 +1,4 @@
-package com.openclassrooms.ocproject8.shared.user.domain;
+package com.openclassrooms.ocproject8.shared.domain;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -41,7 +41,7 @@ public class User {
 	}
 	
 	public User(UserEntity user) {
-		this(user.getUserId(), user.getUserName(), user.getPhoneNumber(), user.getEmailAddress());
+		this(UUID.fromString(user.getUserId()), user.getUserName(), user.getPhoneNumber(), user.getEmailAddress());
 	}
 
 	public UUID getUserId() {

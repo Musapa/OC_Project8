@@ -1,4 +1,4 @@
-package com.openclassrooms.ocproject8.shared.user.domain;
+package com.openclassrooms.ocproject8.shared.domain;
 
 import javax.money.CurrencyUnit;
 import javax.money.Monetary;

@@ -2,13 +2,14 @@ package com.openclassrooms.ocproject8.gps.service;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.IntStream;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.ocproject8.shared.user.domain.User;
-import com.openclassrooms.ocproject8.shared.user.service.UserService;
+import com.openclassrooms.ocproject8.shared.domain.User;
+import com.openclassrooms.ocproject8.shared.domain.UserEntity;
+import com.openclassrooms.ocproject8.shared.service.UserService;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Location;
@@ -26,10 +27,15 @@ public class GpsService {
 		calculateAllUserLocations();
 	}
 	
-	public VisitedLocation getUserLocation(User user) {
-		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
-				: trackUserLocation(user);
-		return visitedLocation;
+	public VisitedLocation getUserLocation(String userName) {
+		Optional<UserEntity> userEntity = userService.getUser(userName);
+		if(userEntity != null) {
+			User user = new User(userEntity.get());
+			VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
+					: trackUserLocation(user);
+			return visitedLocation;
+		}
+		return null;
 	}
 
 	public VisitedLocation trackUserLocation(User user) {

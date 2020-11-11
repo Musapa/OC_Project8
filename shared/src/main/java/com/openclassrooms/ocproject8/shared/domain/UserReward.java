@@ -1,4 +1,4 @@
-package com.openclassrooms.ocproject8.shared.user.domain;
+package com.openclassrooms.ocproject8.shared.domain;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;

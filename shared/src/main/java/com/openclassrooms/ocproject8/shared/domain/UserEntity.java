@@ -1,4 +1,4 @@
-package com.openclassrooms.ocproject8.shared.user.domain;
+package com.openclassrooms.ocproject8.shared.domain;
 
 import java.util.UUID;
 
@@ -13,14 +13,14 @@ import javax.persistence.Table;
 public class UserEntity {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private final UUID userId;
+	private final String userId;
 	private final String userName;
 	private String phoneNumber;
 	private String emailAddress;
+	
 
 	public UserEntity(UUID userId, String userName, String phoneNumber, String emailAddress) {
-		this.userId = userId;
+		this.userId = userId.toString();
 		this.userName = userName;
 		this.phoneNumber = phoneNumber;
 		this.emailAddress = emailAddress;
@@ -50,7 +50,7 @@ public class UserEntity {
 		this.emailAddress = emailAddress;
 	}
 
-	public UUID getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 

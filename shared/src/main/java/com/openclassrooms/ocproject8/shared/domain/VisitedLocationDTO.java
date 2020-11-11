@@ -1,24 +1,24 @@
-package com.openclassrooms.ocproject8.shared.user.domain;
+package com.openclassrooms.ocproject8.shared.domain;
 
 import java.util.Date;
 import java.util.UUID;
 
 import gpsUtil.location.VisitedLocation;
 
-public class VisitedLocationEntity {
+public class VisitedLocationDTO {
 
 	private UUID userId;
 	private Date timeVisited;
-	private LocationEntity locationDTO;
+	private LocationDTO locationDTO;
 
-	public VisitedLocationEntity() {
+	public VisitedLocationDTO() {
 
 	}
 
-	public VisitedLocationEntity(VisitedLocation visitedLocation) {
+	public VisitedLocationDTO(VisitedLocation visitedLocation) {
 		this.userId = visitedLocation.userId;
 		this.timeVisited = visitedLocation.timeVisited;
-		this.locationDTO = new LocationEntity(visitedLocation.location.latitude, visitedLocation.location.longitude);
+		this.locationDTO = new LocationDTO(visitedLocation.location.latitude, visitedLocation.location.longitude);
 	}
 
 	public UUID getUserId() {
@@ -37,11 +37,11 @@ public class VisitedLocationEntity {
 		this.timeVisited = timeVisited;
 	}
 
-	public LocationEntity getLocationDTO() {
+	public LocationDTO getLocationDTO() {
 		return locationDTO;
 	}
 
-	public void setLocationDTO(LocationEntity locationDTO) {
+	public void setLocationDTO(LocationDTO locationDTO) {
 		this.locationDTO = locationDTO;
 	}
 
