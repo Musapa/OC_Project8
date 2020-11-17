@@ -17,33 +17,33 @@ import gpsUtil.location.VisitedLocation;
 
 @Service
 public class WebService {
-	
-	/*@Autowired
-	private UserRepository userRepository;*/
 
-	/*public WebService() {
-		//TODO if there no users initialise them
-		// if userRepsitory.getAllUsers equals 0 than call initialise
-		//if (userRepository.getAllUsers == 0) {
-			
+	@Autowired
+	private UserRepository userRepository;
+
+	public WebService() {
+		// TODO if there no users initialise them
+		if (userRepository.getAllUsers == 0) {
+			userRepository.initializeUsers();
 		}
-	}*/
+	}
+
+	//do I need this?
+	public List<User> getAllUsers() {
+		return userRepository.getAllUsers();
+	}
 
 	public VisitedLocation getUserLocation(String userName) throws Exception {
 		RestTemplate restTemplate = new RestTemplate();
 
-		ResponseEntity<VisitedLocationDTO> response = restTemplate.getForEntity(
-				WebController.GPSURL + "/getLocation?userName=" + userName, VisitedLocationDTO.class);
-		//TODO check response entity is not found
+		ResponseEntity<VisitedLocationDTO> response = restTemplate
+				.getForEntity(WebController.GPSURL + "/getLocation?userName=" + userName, VisitedLocationDTO.class);
+		// TODO check response entity is not found
 		VisitedLocationDTO visitedLocationDTO = response.getBody();
 		Location location = new Location(visitedLocationDTO.getLocationDTO().getLatitude(),
 				visitedLocationDTO.getLocationDTO().getLongitude());
 		return new VisitedLocation(visitedLocationDTO.getUserId(), location, visitedLocationDTO.getTimeVisited());
 	}
-
-	/*public List<User> getAllUsers() {
-		return userRepository.getAllUsers();
-	}*/
 
 	// TODO inistialise database (private)
 

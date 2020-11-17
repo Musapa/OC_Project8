@@ -25,7 +25,7 @@ public class WebController {
 	public String index() {
 		return "Greetings from WebController!";
 	}
-
+	
 	@RequestMapping("/getLocation")
 	public String getLocation(@RequestParam String userName) throws Exception {
 		VisitedLocation visitedLocation = webService.getUserLocation(userName);
@@ -39,7 +39,10 @@ public class WebController {
 		return response.getBody();
 	}
 
-	
+	//do i need this?
+	private User getUser(String userName) {
+		return webService.getUser(userName);
+	}
 	// TODO: Change this method to no longer return a List of Attractions.
 	// Instead: Get the closest five tourist attractions to the user - no matter how
 	// far away they are.
@@ -78,9 +81,5 @@ public class WebController {
 	 * JsonStream.serialize(providers); }
 	 * 
 	 */
-
-	/*private User getUser(String userName) {
-		return webService.getUser(userName);
-	}*/
 
 }

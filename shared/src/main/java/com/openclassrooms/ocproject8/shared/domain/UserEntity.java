@@ -2,17 +2,17 @@ package com.openclassrooms.ocproject8.shared.domain;
 
 import java.util.UUID;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "users")
 public class UserEntity {
-
+	
 	@Id
+	@Column(length=500)
 	private final String userId;
 	private final String userName;
 	private String phoneNumber;
