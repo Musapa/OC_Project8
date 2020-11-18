@@ -8,8 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import com.openclassrooms.ocproject8.shared.domain.User;
+import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
-import com.openclassrooms.ocproject8.shared.repository.UserRepository;
+import com.openclassrooms.ocproject8.shared.service.UserService;
 import com.openclassrooms.ocproject8.web.controller.WebController;
 
 import gpsUtil.location.Location;
@@ -19,18 +20,19 @@ import gpsUtil.location.VisitedLocation;
 public class WebService {
 
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 
 	public WebService() {
 		// TODO if there no users initialise them
-		if (userRepository.getAllUsers == 0) {
-			userRepository.initializeUsers();
+		UserEntity user = new UserEntity();
+		if (user == null) {
+			return userService.initialise();
 		}
 	}
 
 	//do I need this?
 	public List<User> getAllUsers() {
-		return userRepository.getAllUsers();
+		return userService.getAllUsers();
 	}
 
 	public VisitedLocation getUserLocation(String userName) throws Exception {

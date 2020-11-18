@@ -1,5 +1,7 @@
 package com.openclassrooms.ocproject8.shared.service;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -12,6 +14,8 @@ import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.helper.InternalTestHelper;
 import com.openclassrooms.ocproject8.shared.repository.UserRepository;
+import com.openclassrooms.paymybuddy.domain.Account;
+import com.openclassrooms.paymybuddy.domain.Role;
 
 @Service
 public class UserService {
@@ -19,6 +23,10 @@ public class UserService {
 	@Autowired
 	UserRepository userRepository;
 
+	public void initializeUsers(User user) {
+		userRepository.save(new UserEntity(user));
+	}
+	
 	public Optional<UserEntity> getUser(String userName) {
 		return userRepository.findById(userName);
 	}
