@@ -47,10 +47,10 @@ public class GpsService {
 	
 	public Map<String, Location> getAllUsersLocations() {
 		Map<String, Location> allUsersLocations = new HashMap<String, Location>();
-		for (User user : userService.getAllUsers()) {
+		/*for (User user : userService.getAllUsers()) {
 			allUsersLocations.put(user.getUserId().toString(),
 					(user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation().location : null);
-		}
+		}*/
 		return allUsersLocations;
 	}
 

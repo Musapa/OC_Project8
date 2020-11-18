@@ -10,6 +10,7 @@ import org.springframework.web.client.RestTemplate;
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
+import com.openclassrooms.ocproject8.shared.helper.InternalTestHelper;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 import com.openclassrooms.ocproject8.web.controller.WebController;
 
@@ -23,15 +24,12 @@ public class WebService {
 	private UserService userService;
 
 	public WebService() {
-		// TODO if there no users initialise them
-		UserEntity user = new UserEntity();
-		if (user == null) {
-			return userService.initialise();
+		if (userService.getAllUsers().size() == 0) {
+			userService.initializeUsers(InternalTestHelper.getInternalUserNumber());
 		}
 	}
 
-	//do I need this?
-	public List<User> getAllUsers() {
+	public List<UserEntity> getAllUsers() {
 		return userService.getAllUsers();
 	}
 

@@ -40,9 +40,9 @@ public class WebController {
 	}
 
 	//do i need this?
-	private User getUser(String userName) {
-		return webService.getUser(userName);
-	}
+	//private User getUser(String userName) {
+		//return webService.getUser(userName);
+	//}
 	// TODO: Change this method to no longer return a List of Attractions.
 	// Instead: Get the closest five tourist attractions to the user - no matter how
 	// far away they are.
