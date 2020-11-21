@@ -20,10 +20,10 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class WebService {
 
-	@Autowired
 	private UserService userService;
 
-	public WebService() {
+	public WebService(UserService userService) {
+		this.userService = userService;
 		if (userService.getAllUsers().size() == 0) {
 			userService.initializeUsers(InternalTestHelper.getInternalUserNumber());
 		}

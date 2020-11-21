@@ -1,5 +1,7 @@
 package com.openclassrooms.ocproject8.web.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.shared.domain.User;
+import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.web.service.WebService;
 
 import gpsUtil.location.VisitedLocation;
@@ -38,11 +41,8 @@ public class WebController {
 		ResponseEntity<String> response = restTemplate.getForEntity(GPSURL, String.class);
 		return response.getBody();
 	}
-
-	//do i need this?
-	//private User getUser(String userName) {
-		//return webService.getUser(userName);
-	//}
+	
+	
 	// TODO: Change this method to no longer return a List of Attractions.
 	// Instead: Get the closest five tourist attractions to the user - no matter how
 	// far away they are.
