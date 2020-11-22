@@ -33,10 +33,10 @@ public class GpsController {
 		return ResponseEntity.ok().body(new VisitedLocationDTO(visitedLocation));
 	}
 	
-    @RequestMapping("/all-current-locations")
+    /*@RequestMapping("/all-current-locations")
     public String getAllCurrentLocations() {
         return JsonStream.serialize(gpsService.getAllUsersLocations());
-    }
+    }*/
    
    
 }

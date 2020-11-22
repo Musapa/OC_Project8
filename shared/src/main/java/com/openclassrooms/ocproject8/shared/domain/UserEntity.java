@@ -1,11 +1,14 @@
 package com.openclassrooms.ocproject8.shared.domain;
 
+import java.util.List;
 import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+
+import gpsUtil.location.VisitedLocation;
 
 @Entity
 @Table(name = "users")
