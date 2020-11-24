@@ -24,7 +24,7 @@ public class GpsController {
 		return "Greetings from GpsController!";
 	}
 	
-	@RequestMapping(value = "/getLocation", method = RequestMethod.GET, consumes = "application/json", produces = "application/json")
+	@RequestMapping(value = "/getLocation", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<VisitedLocationDTO> getLocation(@RequestParam(value = "userName") String userName) {
 		VisitedLocation visitedLocation = gpsService.getUserLocation(userName);
 		if(visitedLocation == null) {
