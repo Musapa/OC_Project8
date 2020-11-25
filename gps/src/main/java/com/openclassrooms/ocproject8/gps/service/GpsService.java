@@ -24,12 +24,13 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class GpsService {
 
-	@Autowired
+
 	private UserService userService;
 
 	private final GpsUtil gpsUtil = new GpsUtil();
 
-	public GpsService() {
+	public GpsService(UserService userService) {
+		this.userService = userService;
 		calculateAllUserLocations();
 	}
 	
