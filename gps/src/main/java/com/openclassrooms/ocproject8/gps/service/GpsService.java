@@ -26,8 +26,6 @@ public class GpsService {
 
 	@Autowired
 	private UserService userService;
-	
-	private User user;
 
 	private final GpsUtil gpsUtil = new GpsUtil();
 
@@ -64,10 +62,13 @@ public class GpsService {
 
 	public void calculateAllUserLocations() {
 		//TODO read users from database and calculate their locations
+		for (UserEntity userEntity : userService.getAllUsers()) {
 		IntStream.range(0, 3).forEach(i -> {
+			User user = new User(userEntity);
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(),
 					new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
 		});
+		}
 	}
 	
 	private double generateRandomLongitude() {
