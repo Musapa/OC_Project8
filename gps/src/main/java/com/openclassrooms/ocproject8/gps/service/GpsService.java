@@ -2,19 +2,20 @@ package com.openclassrooms.ocproject8.gps.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import org.omg.CORBA.PRIVATE_MEMBER;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
+import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 
 import gpsUtil.GpsUtil;
@@ -31,12 +32,11 @@ public class GpsService {
 
 	public GpsService(UserService userService) {
 		this.userService = userService;
-		calculateAllUserLocations();
 	}
 	
 	public VisitedLocation getUserLocation(String userName) {
 		Optional<UserEntity> userEntity = userService.getUser(userName);
-		if(userEntity != null) {
+		if(userEntity.isPresent()) {
 			User user = new User(userEntity.get());
 			VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
 					: trackUserLocation(user);
@@ -52,24 +52,18 @@ public class GpsService {
 		return visitedLocation;
 	}
 	
-	public Map<String, Location> getAllUsersLocations() {
-		Map<String, Location> allUsersLocations = new HashMap<String, Location>();
-		/*for (User user : userService.getAllUsers()) {
-			allUsersLocations.put(user.getUserId().toString(),
-					(user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation().location : null);
-		}*/
-		return allUsersLocations;
+	public List<VisitedLocationDTO> getAllUsersLocations() {
+		return calculateAllUserLocations();
 	}
 
-	public void calculateAllUserLocations() {
+	public List<VisitedLocationDTO> calculateAllUserLocations() {
 		//TODO read users from database and calculate their locations
-		for (UserEntity userEntity : userService.getAllUsers()) {
-		IntStream.range(0, 3).forEach(i -> {
-			User user = new User(userEntity);
-			user.addToVisitedLocations(new VisitedLocation(user.getUserId(),
-					new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
-		});
+		List<VisitedLocation> visitedLocations = new ArrayList<>();
+		for (UserEntity userEntity : userService.getAllUsers()) {			
+			VisitedLocation visitedLocation = new VisitedLocation(userEntity.getUserId(), generateRandomLongitude(),generateRandomLatitude(),getRandomTime());
+			visitedLocations.add(new VisitedLocationDTO(visitedLocation));
 		}
+		return visitedLocations;
 	}
 	
 	private double generateRandomLongitude() {

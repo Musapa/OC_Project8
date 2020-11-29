@@ -35,7 +35,6 @@ public class WebService {
 
 	public VisitedLocation getUserLocation(String userName) throws Exception {
 		RestTemplate restTemplate = new RestTemplate();
-
 		ResponseEntity<VisitedLocationDTO> response = restTemplate
 				.getForEntity(WebController.GPSURL + "/getLocation?userName=" + userName, VisitedLocationDTO.class);
 		// TODO check response entity is not found
@@ -44,6 +43,23 @@ public class WebService {
 				visitedLocationDTO.getLocationDTO().getLongitude());
 		return new VisitedLocation(visitedLocationDTO.getUserId(), location, visitedLocationDTO.getTimeVisited());
 	}
+
+	public List<VisitedLocationDTO> getAllCurrentLocations() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
+	/* TODO: Get a list of every user's most recent
+	 * location as JSON //- Note: does not use gpsUtil to query for their current
+	 * location, // but rather gathers the user's current location from their stored
+	 * location history. // // Return object should be the just a JSON mapping of
+	 * userId to Locations similar to: // { //
+	 * "019b04a9-067a-4c76-8817-ee75088c3822":
+	 * {"longitude":-48.188821,"latitude":74.84371} // ... // }
+	 * 
+	 * return JsonStream.serialize(""); }
+	 */
 
 	// TODO inistialise database (private)
 

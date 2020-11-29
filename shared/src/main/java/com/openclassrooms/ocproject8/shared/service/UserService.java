@@ -29,7 +29,7 @@ public class UserService {
 	}
 	
 	public Optional<UserEntity> getUser(String userName) {
-		return userRepository.findById(userName);
+		return userRepository.findByUserName(userName);
 	}
 
 	public void addUser(UserEntity userEntity) {
