@@ -33,6 +33,7 @@ public class WebService {
 		return userService.getAllUsers();
 	}
 
+	// http://localhost:8080/getLocation?userName=internalUser1
 	public VisitedLocation getUserLocation(String userName) throws Exception {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<VisitedLocationDTO> response = restTemplate
@@ -44,9 +45,15 @@ public class WebService {
 		return new VisitedLocation(visitedLocationDTO.getUserId(), location, visitedLocationDTO.getTimeVisited());
 	}
 
-	public List<VisitedLocationDTO> getAllCurrentLocations() {
-		// TODO Auto-generated method stub
-		return null;
+	public VisitedLocation getAllCurrentLocations() {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<VisitedLocationDTO> response = restTemplate
+				.getForEntity(WebController.GPSURL + "/getCurrentLocation?userName=", VisitedLocationDTO.class);
+		// TODO check response entity is not found
+		VisitedLocationDTO visitedLocationDTO = response.getBody();
+		Location location = new Location(visitedLocationDTO.getLocationDTO().getLatitude(),
+				visitedLocationDTO.getLocationDTO().getLongitude());
+		return new VisitedLocation(visitedLocationDTO.getUserId(), location, visitedLocationDTO.getTimeVisited());
 	}
 	
 	

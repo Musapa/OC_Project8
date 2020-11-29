@@ -32,6 +32,7 @@ public class UserEntity {
 	public UserEntity() {
 		this(UUID.randomUUID(), "", "", "");
 	}
+		
 	
 	public UserEntity(User user) {
 		this(user.getUserId(), user.getUserName(), user.getPhoneNumber(), user.getEmailAddress());

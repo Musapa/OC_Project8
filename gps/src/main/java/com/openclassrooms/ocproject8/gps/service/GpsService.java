@@ -58,10 +58,10 @@ public class GpsService {
 
 	public List<VisitedLocationDTO> calculateAllUserLocations() {
 		//TODO read users from database and calculate their locations
-		List<VisitedLocation> visitedLocations = new ArrayList<>();
+		List<VisitedLocationDTO> visitedLocations = new ArrayList<>();
 		for (UserEntity userEntity : userService.getAllUsers()) {			
-			VisitedLocation visitedLocation = new VisitedLocation(userEntity.getUserId(), generateRandomLongitude(),generateRandomLatitude(),getRandomTime());
-			visitedLocations.add(new VisitedLocationDTO(visitedLocation));
+			/*VisitedLocation visitedLocation = new VisitedLocation(userEntity.getUserId(), generateRandomLongitude(),generateRandomLatitude(),getRandomTime());
+			visitedLocations.add(new VisitedLocationDTO(visitedLocation));*/
 		}
 		return visitedLocations;
 	}
