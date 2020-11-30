@@ -1,5 +1,7 @@
 package com.openclassrooms.ocproject8.gps.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -7,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.gps.service.GpsService;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 
@@ -34,8 +35,9 @@ public class GpsController {
 	}
 	
     @RequestMapping("/all-current-locations")
-    public String getAllCurrentLocations() {
-        return JsonStream.serialize(gpsService.getAllUsersLocations());
+    public ResponseEntity<List<VisitedLocationDTO>> getAllCurrentLocations() {
+    	List<VisitedLocationDTO> visitedLocationDTO = gpsService.getAllUsersLocations();	
+    	return ResponseEntity.ok().body(visitedLocationDTO);
     }
    
    
