@@ -2,12 +2,12 @@ package com.openclassrooms.ocproject8.web.service;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.helper.InternalTestHelper;
@@ -44,16 +44,12 @@ public class WebService {
 				visitedLocationDTO.getLocationDTO().getLongitude());
 		return new VisitedLocation(visitedLocationDTO.getUserId(), location, visitedLocationDTO.getTimeVisited());
 	}
-
-	public VisitedLocation getAllCurrentLocations() {
+	
+	public List<VisitedLocationDTO> getAllCurrentLocations() {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<VisitedLocationDTO>> response = restTemplate
-				.getForEntity(WebController.GPSURL + "/all-current-locations", VisitedLocationDTO.class);
-		// TODO check response entity is not found
-		VisitedLocationDTO visitedLocationDTO = response.getBody();
-		Location location = new Location(visitedLocationDTO.getLocationDTO().getLatitude(),
-				visitedLocationDTO.getLocationDTO().getLongitude());
-		return new VisitedLocation(visitedLocationDTO.getUserId(), location, visitedLocationDTO.getTimeVisited());
+				.exchange(WebController.GPSURL + "/getAllCurrentLocations", HttpMethod.GET, null,new ParameterizedTypeReference<List<VisitedLocationDTO>>() {});
+		return response.getBody();
 	}
 
 	// TODO inistialise database (private)

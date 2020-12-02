@@ -21,6 +21,13 @@ public class VisitedLocationDTO {
 		this.locationDTO = new LocationDTO(visitedLocation.location.latitude, visitedLocation.location.longitude);
 	}
 
+
+	public VisitedLocationDTO(UUID userId, Date timeVisited, LocationDTO locationDTO) {
+		this.userId = userId;
+		this.timeVisited = timeVisited;
+		this.locationDTO = locationDTO;
+	}
+
 	public UUID getUserId() {
 		return userId;
 	}

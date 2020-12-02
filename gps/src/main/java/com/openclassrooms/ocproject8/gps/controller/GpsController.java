@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassrooms.ocproject8.gps.service.GpsService;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 
+
 import gpsUtil.location.VisitedLocation;
 
 @RestController
@@ -34,7 +35,7 @@ public class GpsController {
 		return ResponseEntity.ok().body(new VisitedLocationDTO(visitedLocation));
 	}
 	
-    @RequestMapping("/all-current-locations")
+    @RequestMapping("/getAllCurrentLocations")
     public ResponseEntity<List<VisitedLocationDTO>> getAllCurrentLocations() {
     	List<VisitedLocationDTO> visitedLocationDTO = gpsService.getAllUsersLocations();	
     	return ResponseEntity.ok().body(visitedLocationDTO);

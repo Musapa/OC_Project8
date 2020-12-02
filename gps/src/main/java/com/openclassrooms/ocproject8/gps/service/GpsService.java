@@ -4,22 +4,20 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
-import java.util.stream.IntStream;
+import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.ocproject8.shared.domain.LocationDTO;
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 
 import gpsUtil.GpsUtil;
-import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 
 @Service
@@ -55,15 +53,15 @@ public class GpsService {
 	public List<VisitedLocationDTO> getAllUsersLocations() {
 		return calculateAllUserLocations();
 	}
-
+	
 	public List<VisitedLocationDTO> calculateAllUserLocations() {
-		//TODO read users from database and calculate their locations
 		List<VisitedLocationDTO> visitedLocations = new ArrayList<>();
-		for (UserEntity userEntity : userService.getAllUsers()) {			
-			VisitedLocation visitedLocation = new VisitedLocation(userEntity.getUserId(), generateRandomLongitude(),generateRandomLatitude(),getRandomTime());
-			visitedLocations.add(new VisitedLocationDTO(visitedLocation));
+		for (UserEntity userEntity : userService.getAllUsers()) {	
+			LocationDTO locationDTO = new LocationDTO(generateRandomLatitude(), generateRandomLongitude());
+			visitedLocations.add(new VisitedLocationDTO(UUID.fromString(userEntity.getUserId()),getRandomTime(), locationDTO));
 		}
 		return visitedLocations;
+
 	}
 	
 	private double generateRandomLongitude() {
