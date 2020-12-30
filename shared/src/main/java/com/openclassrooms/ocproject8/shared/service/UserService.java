@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
+import com.openclassrooms.ocproject8.shared.helper.InternalTestHelper;
 import com.openclassrooms.ocproject8.shared.repository.UserRepository;
 
 @Service
@@ -18,7 +19,7 @@ public class UserService {
 	UserRepository userRepository;
 
 	public void initializeUsers(int count) {
-		IntStream.range(0, count).forEach(i -> {
+		IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
 			String userName = "internalUser" + i;
 			String phone = "000";
 			String email = userName + "@tourGuide.com";
