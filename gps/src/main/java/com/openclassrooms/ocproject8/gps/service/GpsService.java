@@ -47,7 +47,7 @@ public class GpsService {
 		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
 		//rewardsService.calculateRewards(user);
-		//checking code
+		//fixing problems
 		return visitedLocation;
 	}
 	
