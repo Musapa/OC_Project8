@@ -7,13 +7,17 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.databind.Module.SetupContext;
 import com.openclassrooms.ocproject8.gps.GpsApp;
+import com.openclassrooms.ocproject8.gps.service.GpsService;
+import com.openclassrooms.ocproject8.shared.service.UserService;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GpsApp.class)
@@ -21,6 +25,18 @@ import com.openclassrooms.ocproject8.gps.GpsApp;
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class TestPerformance {
 
+	@Autowired
+	GpsService gpsService;
+	
+	@Autowired
+	UserService userService;
+	
+	
+	//spring boot test autowired gps service , user service , call initialise ussers
+	//in Setup on users create 10 000 users - call intialise users in user service
+	//in test call calculateAllUserLocations()
+	
+	
 	/*
 	 * A note on performance improvements:
 	 *     

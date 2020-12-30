@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -15,6 +16,7 @@ import java.util.concurrent.Future;
 
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.ocproject8.shared.domain.LocationDTO;
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
@@ -23,13 +25,29 @@ import com.openclassrooms.ocproject8.shared.service.UserService;
 import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;
 
+class GpsTask implements Callable<VisitedLocation> {
+
+	private GpsUtil gpsUtil;
+	private UserEntity userEntity;
+	
+	public GpsTask(GpsUtil gpsUtil, UserEntity user) {
+		this.gpsUtil = gpsUtil;
+		this.userEntity = user;
+	}
+
+	@Override
+	public VisitedLocation call() throws Exception {
+		return gpsUtil.getUserLocation(UUID.fromString(userEntity.getUserId()));
+	}
+}
+
 @Service
 public class GpsService {
 
 	private UserService userService;
-	
+
 	private final GpsUtil gpsUtil = new GpsUtil();
-	
+
 	public GpsService(UserService userService) {
 		this.userService = userService;
 	}
@@ -56,6 +74,7 @@ public class GpsService {
 		return calculateAllUserLocations();
 	}
 
+	// we use visitedLocationDTO because VisitedLocation is not serisiable
 	public List<VisitedLocationDTO> calculateAllUserLocations() {
 
 		List<VisitedLocationDTO> visitedLocations = new ArrayList<>();
@@ -63,9 +82,10 @@ public class GpsService {
 		ExecutorService executor = Executors.newFixedThreadPool(1000);
 		// create a list to hold the Future object associated with Callable
 		List<Future<VisitedLocation>> list = new ArrayList<Future<VisitedLocation>>();
-		// Create Callable instance
-		Callable<VisitedLocation> callable = new GpsTask(gpsUtil);
-		for (int i = 0; i < 10000; i++) {
+
+		for (UserEntity userEntity : userService.getAllUsers()) {
+			// Create Callable instance
+			Callable<VisitedLocation> callable = new GpsTask(gpsUtil, userEntity);
 			// submit Callable tasks to be executed by thread pool
 			Future<VisitedLocation> future = executor.submit(callable);
 			// add Future to the list, we can get return value using Future
@@ -77,8 +97,8 @@ public class GpsService {
 				// Future.get() waits for a task to be a complited
 
 				// add location to list
-				visitedLocations.add(future.get());
-				
+				visitedLocations.add(new VisitedLocationDTO(future.get()));
+
 			} catch (InterruptedException | ExecutionException e) {
 				e.printStackTrace();
 			}
@@ -91,9 +111,10 @@ public class GpsService {
 		 * = new LocationDTO(generateRandomLatitude(), generateRandomLongitude());
 		 * visitedLocations.add(new
 		 * VisitedLocationDTO(UUID.fromString(userEntity.getUserId()),getRandomTime(),
-		 * locationDTO)); } return visitedLocations;
+		 * locationDTO)); }
 		 */
 
+		return visitedLocations;
 	}
 
 	private double generateRandomLongitude() {
