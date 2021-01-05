@@ -16,7 +16,6 @@ import java.util.concurrent.Future;
 
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.ocproject8.shared.domain.LocationDTO;
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
@@ -29,7 +28,7 @@ class GpsTask implements Callable<VisitedLocation> {
 
 	private GpsUtil gpsUtil;
 	private UserEntity userEntity;
-	
+
 	public GpsTask(GpsUtil gpsUtil, UserEntity user) {
 		this.gpsUtil = gpsUtil;
 		this.userEntity = user;
@@ -95,8 +94,6 @@ public class GpsService {
 			try {
 				// print the return value of future, output delay in console because
 				// Future.get() waits for a task to be a complited
-
-				// add location to list
 				visitedLocations.add(new VisitedLocationDTO(future.get()));
 
 			} catch (InterruptedException | ExecutionException e) {
@@ -104,15 +101,6 @@ public class GpsService {
 			}
 		}
 		executor.shutdown();
-
-		/*
-		 * List<VisitedLocationDTO> visitedLocations = new ArrayList<>(); for
-		 * (UserEntity userEntity : userService.getAllUsers()) { LocationDTO locationDTO
-		 * = new LocationDTO(generateRandomLatitude(), generateRandomLongitude());
-		 * visitedLocations.add(new
-		 * VisitedLocationDTO(UUID.fromString(userEntity.getUserId()),getRandomTime(),
-		 * locationDTO)); }
-		 */
 
 		return visitedLocations;
 	}
