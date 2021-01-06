@@ -78,7 +78,7 @@ public class GpsService {
 
 		List<VisitedLocationDTO> visitedLocations = new ArrayList<>();
 
-		ExecutorService executor = Executors.newFixedThreadPool(1000);
+		ExecutorService executor = Executors.newFixedThreadPool(100000);
 		// create a list to hold the Future object associated with Callable
 		List<Future<VisitedLocation>> list = new ArrayList<Future<VisitedLocation>>();
 

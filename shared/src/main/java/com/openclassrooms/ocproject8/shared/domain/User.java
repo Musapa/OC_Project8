@@ -22,7 +22,7 @@ public class User {
 	private UserPreferences userPreferences = new UserPreferences();
 	private List<Provider> tripDeals = new ArrayList<>();
 
-	// Lock for thread synchronization for user's visitedLocation list
+	/*// Lock for thread synchronization for user's visitedLocation list
 	ReadWriteLock visitedLocationLock = new ReentrantReadWriteLock();
 	Lock readVisitedLocationLock = visitedLocationLock.readLock();
 	Lock writeVisitedLocationLock = visitedLocationLock.writeLock();
@@ -30,7 +30,7 @@ public class User {
 	// Lock for thread synchronization for user's reward list
 	ReadWriteLock userRewardLock = new ReentrantReadWriteLock();
 	Lock readUserRewardLock = visitedLocationLock.readLock();
-	Lock writeUserRewardLock = visitedLocationLock.writeLock();	
+	Lock writeUserRewardLock = visitedLocationLock.writeLock();	*/
 	
 	
 	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {
