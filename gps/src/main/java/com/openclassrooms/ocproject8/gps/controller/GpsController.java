@@ -40,6 +40,5 @@ public class GpsController {
     	List<VisitedLocationDTO> visitedLocationDTO = gpsService.getAllUsersLocations();	
     	return ResponseEntity.ok().body(visitedLocationDTO);
     }
-   
-   
+ 
 }

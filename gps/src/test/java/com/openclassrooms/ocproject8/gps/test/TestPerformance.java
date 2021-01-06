@@ -2,11 +2,11 @@ package com.openclassrooms.ocproject8.gps.test;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.UUID;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.IntStream;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.openclassrooms.ocproject8.gps.GpsApp;
 import com.openclassrooms.ocproject8.gps.service.GpsService;
-import com.openclassrooms.ocproject8.shared.domain.User;
-import com.openclassrooms.ocproject8.shared.domain.UserEntity;
+import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.repository.UserRepository;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 
@@ -38,29 +37,21 @@ public class TestPerformance {
 	@Autowired
 	UserRepository userRepository;
 	
-	@Test
+	@Before
 	public void initializeUsers() {
-		IntStream.range(0, 10000).forEach(i -> {
-			String userName = "internalUser" + i;
-			String phone = "000";
-			String email = userName + "@tourGuide.com";
-			UserEntity userEntity = new UserEntity(UUID.randomUUID(), userName, phone, email);
-			userRepository.save(userEntity);
-		});
+		userService.initializeUsers(10000);
 	}
 	
-	//@Ignore
 	@Test
 	public void highVolumeTrackLocation() {
 	    StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		for(User user : userService.getAllUsers()) {
-			gpsService.trackUserLocation(user);
-		}
+		
+		List<VisitedLocationDTO> locations = gpsService.getAllUsersLocations();
 		stopWatch.stop();
-		gpsService.tracker.stopTracking();
         
-		System.out.println("highVolumeTrackLocation: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
+		
+		System.out.println("highVolumeTrackLocation: Number of locations visited: "+ locations.size()+ " Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 	
