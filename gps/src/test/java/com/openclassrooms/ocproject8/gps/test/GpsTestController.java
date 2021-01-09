@@ -45,11 +45,21 @@ public class GpsTestController {
 	@Autowired
 	private UserService userService;
 
+	boolean initialised = false;
+
+	@Before
+	public void initialise() {
+		if (!initialised) {
+			userService.initializeUsers(100);
+			initialised = true;
+		}
+	}
+
 	@Before
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
 	}
-	
+
 	@Test
 	public void getValidLocation() throws Exception {
 		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
@@ -70,15 +80,14 @@ public class GpsTestController {
 
 	@Test
 	public void getAllLocations() throws Exception {
-		userService.initializeUsers(100);
-		
+
 		MvcResult result = mockMvc.perform(get("/getAllCurrentLocations")).andExpect(status().isOk()).andReturn();
 		String json = result.getResponse().getContentAsString();
 		List<VisitedLocationDTO> visitedLocationsDTO = objectMapper.readValue(json,
 				new TypeReference<List<VisitedLocationDTO>>() {
 				});
 
-		// zasto 300?
+		// why 300?
 		assertEquals("There should be 100 locations", 100, visitedLocationsDTO.size());
 	}
 
