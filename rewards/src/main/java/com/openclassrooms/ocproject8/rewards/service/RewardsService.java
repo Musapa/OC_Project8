@@ -1,10 +1,13 @@
 package com.openclassrooms.ocproject8.rewards.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.openclassrooms.ocproject8.shared.domain.User;
+import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
 import com.openclassrooms.ocproject8.shared.service.UserService;
+import tripPricer.Provider;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
@@ -15,18 +18,14 @@ import rewardCentral.RewardCentral;
 public class RewardsService {
 
 	private UserService userService;
-
-	public RewardsService(UserService userService) {
-		this.userService = userService;
+	
+	public Optional<UserEntity> getUser(String userName) {
+		return userService.getUser(userName);
 	}
 	
 	public List<UserReward> getUserRewards(User user) {
 		return user.getUserRewards();
 	}
-	
-	
-	
-	
 	
 	 private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
@@ -40,6 +39,19 @@ public class RewardsService {
 		public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 			this.gpsUtil = gpsUtil;
 			this.rewardsCentral = rewardCentral;
+		}
+		
+		public VisitedLocation getUserLocation(User user) {
+			VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
+					: trackUserLocation(user);
+			return visitedLocation;
+		}
+		
+		public VisitedLocation trackUserLocation(User user) {
+			VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+			user.addToVisitedLocations(visitedLocation);
+			calculateRewards(user);
+			return visitedLocation;
 		}
 		
 		public void setProximityBuffer(int proximityBuffer) {
