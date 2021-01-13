@@ -20,18 +20,7 @@ public class User {
 	private List<VisitedLocation> visitedLocations = new ArrayList<>();
 	private List<UserReward> userRewards = new ArrayList<>();
 	private UserPreferences userPreferences = new UserPreferences();
-	private List<Provider> tripDeals = new ArrayList<>();
-
-	/*// Lock for thread synchronization for user's visitedLocation list
-	ReadWriteLock visitedLocationLock = new ReentrantReadWriteLock();
-	Lock readVisitedLocationLock = visitedLocationLock.readLock();
-	Lock writeVisitedLocationLock = visitedLocationLock.writeLock();
-
-	// Lock for thread synchronization for user's reward list
-	ReadWriteLock userRewardLock = new ReentrantReadWriteLock();
-	Lock readUserRewardLock = visitedLocationLock.readLock();
-	Lock writeUserRewardLock = visitedLocationLock.writeLock();	*/
-	
+	private List<Provider> tripDeals = new ArrayList<>();	
 	
 	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {
 		this.userId = userId;

@@ -45,7 +45,7 @@ public class GpsTestController {
 	@Autowired
 	private UserService userService;
 
-	boolean initialised = false;
+	private static boolean initialised = false;
 
 	@Before
 	public void initialise() {
@@ -69,7 +69,7 @@ public class GpsTestController {
 			String json = result.getResponse().getContentAsString();
 			VisitedLocationDTO visitedLocation = objectMapper.readValue(json, VisitedLocationDTO.class);
 
-			assertEquals("Incorrect user", userEntity.get().getUserId(), visitedLocation.getUserId());
+			assertEquals("Incorrect user", userEntity.get().getUserId(), visitedLocation.getUserId().toString());
 		}
 	}
 
