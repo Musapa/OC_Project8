@@ -31,30 +31,21 @@ public class RewardsController {
 		return "Greetings from RewardsController!";
 	}
 
-	/*
-	 * @RequestMapping(value = "/getRewards", method = RequestMethod.GET, produces =
-	 * "application/json") public ResponseEntity<VisitedLocationDTO>
-	 * getRewards(@RequestParam(value = "userName") String userName) {
-	 * VisitedLocation visitedLocation = gpsService.getUserLocation(userName);
-	 * if(visitedLocation == null) { return ResponseEntity.notFound().build(); }
-	 * return ResponseEntity.ok().body(new VisitedLocationDTO(visitedLocation)); }
-	 */
-
 	@RequestMapping("/getRewards")
 	public String getRewards(@RequestParam String userName) {
 		return JsonStream.serialize(rewardsService.getUserRewards(getUser(userName)));
 	}
 
-	@RequestMapping("/getNearbyAttractions")
+	/*@RequestMapping("/getNearbyAttractions")
 	public String getNearbyAttractions(@RequestParam String userName) {
 		VisitedLocation visitedLocation = rewardsService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(tourGuideService.getNearByAttractions(visitedLocation));
+		return JsonStream.serialize(rewardsService.getNearByAttractions(visitedLocation));
 	}
 
 	@RequestMapping("/getTripDeals")
 	public String getTripDeals(@RequestParam String userName) {
-		List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
+		List<Provider> providers = rewardsService.getTripDeals(getUser(userName));
 		return JsonStream.serialize(providers);
-	}
+	}*/
 
 }
