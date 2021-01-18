@@ -29,10 +29,11 @@ public class RewardsService {
 	private final RewardCentral rewardsCentral;
 
 	private UserService userService;
-
-	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
-		this.gpsUtil = gpsUtil;
-		this.rewardsCentral = rewardCentral;
+	
+	public RewardsService(UserService userService) {
+		this.userService = userService;
+		this.gpsUtil = new GpsUtil();
+		this.rewardsCentral = new RewardCentral();
 	}
 
 	public Optional<UserEntity> getUser(String userName) {

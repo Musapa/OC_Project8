@@ -1,8 +1,5 @@
 package com.openclassrooms.ocproject8.rewards.controller;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -11,10 +8,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.shared.domain.User;
-import com.openclassrooms.ocproject8.shared.domain.UserEntity;
-
-import gpsUtil.location.VisitedLocation;
-import tripPricer.Provider;
 
 @RestController
 public class RewardsController {
@@ -22,8 +15,8 @@ public class RewardsController {
 	@Autowired
 	RewardsService rewardsService;
 
-	private Optional<UserEntity> getUser(String userName) {
-		return rewardsService.getUser(userName);
+	private User getUser(String userName) {
+		return new User(rewardsService.getUser(userName).get());
 	}
 
 	@RequestMapping("/")
