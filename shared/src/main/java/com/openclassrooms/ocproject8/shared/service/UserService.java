@@ -39,4 +39,8 @@ public class UserService {
 		return userRepository.findAll();
 	}
 	
+	public void deleteAll() {
+		userRepository.deleteAll();
+	}
+	
 }

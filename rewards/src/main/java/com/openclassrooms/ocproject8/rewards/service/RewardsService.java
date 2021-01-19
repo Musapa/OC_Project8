@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
@@ -27,6 +28,7 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
+	public final Tracker tracker;
 
 	private UserService userService;
 	
@@ -34,6 +36,7 @@ public class RewardsService {
 		this.userService = userService;
 		this.gpsUtil = new GpsUtil();
 		this.rewardsCentral = new RewardCentral();
+		this.tracker = new Tracker(this, userService);
 	}
 
 	public Optional<UserEntity> getUser(String userName) {
