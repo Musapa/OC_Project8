@@ -16,7 +16,7 @@ public class RewardsController {
 	RewardsService rewardsService;
 
 	private User getUser(String userName) {
-		return new User(rewardsService.getUser(userName).get());
+		return rewardsService.getUser(userName);
 	}
 
 	@RequestMapping("/")

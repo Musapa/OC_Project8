@@ -49,7 +49,7 @@ public class Tracker extends Thread {
 			List<UserEntity> users = userService.getAllUsers();
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
-			users.forEach(u -> rewardsService.trackUserLocation(new User(u)));
+			users.forEach(u -> rewardsService.trackUserLocation(rewardsService.getUser(u.getUserName())));
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
 			stopWatch.reset();
