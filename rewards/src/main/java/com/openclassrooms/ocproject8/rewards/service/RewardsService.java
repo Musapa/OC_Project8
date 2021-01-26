@@ -76,13 +76,13 @@ public class RewardsService {
 	public void calculateRewards(User user) {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
-
+		logger.debug("Number of attractions " + attractions.size());
 		for (VisitedLocation visitedLocation : userLocations) {
 			for (Attraction attraction : attractions) {
 				if (user.getUserRewards().stream()
 						.filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					//logger.debug("Looking for new attraction for user " + user.getUserName());
-					if (nearAttraction(attractionProximityRange, visitedLocation, attraction)) {
+					
+					if (nearAttraction(user.getUserPreferences().getAttractionProximity(), visitedLocation, attraction)) {
 						logger.debug("Add reward for user " + user.getUserName());
 						user.addUserReward(
 								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
@@ -119,7 +119,6 @@ public class RewardsService {
 	}
 
 	private void initialiseUserMap() {
-
 		for (UserEntity userEntity : userService.getAllUsers()) {
 			User user = new User(userEntity);
 			
