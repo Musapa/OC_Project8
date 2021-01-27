@@ -23,17 +23,17 @@ import rewardCentral.RewardCentral;
 
 class TrackerTask implements Callable<VisitedLocation> {
 
-	private RewardCentral rewardCentral;
+	private RewardsService rewardsService;
 	private UserEntity userEntity;
 
-	public TrackerTask(RewardCentral rewardCentral, UserEntity user) {
-		this.rewardCentral = rewardCentral;
+	public TrackerTask(RewardsService rewardsService, UserEntity user) {
+		this.rewardsService = rewardsService;
 		this.userEntity = user;
 	}
 
 	@Override
 	public VisitedLocation call() throws Exception {
-		return rewardCentral.getAttractionRewardPoints(attractionId, UUID.fromString(userEntity.getUserId()));
+		return rewardsService.trackUserLocation(rewardsService.getUser(userEntity.getUserName()));
 	}
 }
 
@@ -99,7 +99,7 @@ public class Tracker {
 
 		for (UserEntity userEntity : userService.getAllUsers()) {
 			// Create Callable instance
-			Callable<VisitedLocation> callable = new TrackerTask(rewardCentral, userEntity);
+			Callable<VisitedLocation> callable = new TrackerTask(rewardsService, userEntity);
 			// submit Callable tasks to be executed by thread pool
 			Future<VisitedLocation> future = executor.submit(callable);
 			// add Future to the list, we can get return value using Future
