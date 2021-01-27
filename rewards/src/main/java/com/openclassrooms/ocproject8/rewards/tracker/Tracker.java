@@ -2,7 +2,6 @@ package com.openclassrooms.ocproject8.rewards.tracker;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -61,33 +60,6 @@ public class Tracker {
 		stop = true;
 		executorService.shutdownNow();
 	}
-	
-	/*@Override
-	public void run() {
-		StopWatch stopWatch = new StopWatch();
-		while(true) {
-			if(Thread.currentThread().isInterrupted() || stop) {
-				logger.debug("Tracker stopping");
-				break;
-			}
-			
-			List<UserEntity> users = userService.getAllUsers();
-			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
-			stopWatch.start();
-			users.forEach(u -> rewardsService.trackUserLocation(rewardsService.getUser(u.getUserName())));
-			stopWatch.stop();
-			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
-			stopWatch.reset();
-			try {
-				logger.debug("Tracker sleeping");
-				TimeUnit.SECONDS.sleep(trackingPollingInterval);
-			} catch (InterruptedException e) {
-				break;
-			}
-		}
-		
-	}*/
-	
 	
 	public List<VisitedLocationDTO> creatingRewards() {
 

@@ -42,6 +42,7 @@ public class RewardsService {
 		this.rewardsCentral = new RewardCentral();
 		this.initialiseUserMap();
 		this.tracker = new Tracker(this, userService);
+		this.tracker.creatingRewards();
 	}
 
 	public User getUser(String userName) {
@@ -118,7 +119,7 @@ public class RewardsService {
 		return statuteMiles;
 	}
 
-	private void initialiseUserMap() {
+	public void initialiseUserMap() {
 		for (UserEntity userEntity : userService.getAllUsers()) {
 			User user = new User(userEntity);
 			
