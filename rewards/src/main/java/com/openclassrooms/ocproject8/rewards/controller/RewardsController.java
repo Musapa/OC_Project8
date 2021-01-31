@@ -1,5 +1,7 @@
 package com.openclassrooms.ocproject8.rewards.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -8,6 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.shared.domain.User;
+
+import gpsUtil.location.VisitedLocation;
+import tripPricer.Provider;
 
 @RestController
 public class RewardsController {
@@ -29,7 +34,7 @@ public class RewardsController {
 		return JsonStream.serialize(rewardsService.getUserRewards(getUser(userName)));
 	}
 
-	/*@RequestMapping("/getNearbyAttractions")
+	@RequestMapping("/getNearbyAttractions")
 	public String getNearbyAttractions(@RequestParam String userName) {
 		VisitedLocation visitedLocation = rewardsService.getUserLocation(getUser(userName));
 		return JsonStream.serialize(rewardsService.getNearByAttractions(visitedLocation));
@@ -39,6 +44,6 @@ public class RewardsController {
 	public String getTripDeals(@RequestParam String userName) {
 		List<Provider> providers = rewardsService.getTripDeals(getUser(userName));
 		return JsonStream.serialize(providers);
-	}*/
+	}
 
 }

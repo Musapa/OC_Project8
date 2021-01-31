@@ -1,5 +1,6 @@
 package com.openclassrooms.ocproject8.rewards.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
+import tripPricer.Provider;
+import tripPricer.TripPricer;
 
 @Service
 public class RewardsService {
@@ -33,6 +36,7 @@ public class RewardsService {
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
 	public final Tracker tracker;
+	private final TripPricer tripPricer = new TripPricer();
 
 	private UserService userService;
 
@@ -125,6 +129,27 @@ public class RewardsService {
 			
 			userMap.put(user.getUserName(), user);
 		}
+	}
+	
+	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
+		List<Attraction> nearbyAttractions = new ArrayList<>();
+		for (Attraction attraction : gpsUtil.getAttractions()) {
+			if (isWithinAttractionProximity(attraction, visitedLocation.location)) {
+				nearbyAttractions.add(attraction);
+			}
+		}
+		return nearbyAttractions;
+	}
+	
+	private static final String tripPricerApiKey = "test-server-api-key";
+	
+	public List<Provider> getTripDeals(User user) {
+		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
+		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(),
+				user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
+				user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
+		user.setTripDeals(providers);
+		return providers;
 	}
 
 }
