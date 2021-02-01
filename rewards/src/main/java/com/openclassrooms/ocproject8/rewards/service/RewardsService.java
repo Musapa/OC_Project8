@@ -22,6 +22,20 @@ import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
+class TrackerThread extends Thread {
+
+	private Tracker tracker;
+
+	public TrackerThread(Tracker tracker) {
+		this.tracker = tracker;
+	}
+
+	public void run() {
+		this.tracker.creatingRewards();
+	}
+	
+}
+
 @Service
 public class RewardsService {
 
@@ -31,7 +45,7 @@ public class RewardsService {
 	// proximity in miles
 	private int defaultProximityBuffer = 200;
 	private int proximityBuffer = defaultProximityBuffer;
-	private int attractionProximityRange = 200;
+	private int attractionProximityRange = 20000;
 	private HashMap<String, User> userMap = new HashMap<>();
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
@@ -46,7 +60,7 @@ public class RewardsService {
 		this.rewardsCentral = new RewardCentral();
 		this.initialiseUserMap();
 		this.tracker = new Tracker(this, userService);
-		this.tracker.creatingRewards();
+		new TrackerThread(this.tracker).start();
 	}
 
 	public User getUser(String userName) {
@@ -86,8 +100,9 @@ public class RewardsService {
 			for (Attraction attraction : attractions) {
 				if (user.getUserRewards().stream()
 						.filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					
-					if (nearAttraction(user.getUserPreferences().getAttractionProximity(), visitedLocation, attraction)) {
+
+					if (nearAttraction(user.getUserPreferences().getAttractionProximity(), visitedLocation,
+							attraction)) {
 						logger.debug("Add reward for user " + user.getUserName());
 						user.addUserReward(
 								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
@@ -126,11 +141,11 @@ public class RewardsService {
 	public void initialiseUserMap() {
 		for (UserEntity userEntity : userService.getAllUsers()) {
 			User user = new User(userEntity);
-			
+
 			userMap.put(user.getUserName(), user);
 		}
 	}
-	
+
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {
 		List<Attraction> nearbyAttractions = new ArrayList<>();
 		for (Attraction attraction : gpsUtil.getAttractions()) {
@@ -140,9 +155,9 @@ public class RewardsService {
 		}
 		return nearbyAttractions;
 	}
-	
+
 	private static final String tripPricerApiKey = "test-server-api-key";
-	
+
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(),

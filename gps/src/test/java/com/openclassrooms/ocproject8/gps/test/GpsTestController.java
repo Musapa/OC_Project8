@@ -90,7 +90,4 @@ public class GpsTestController {
 		// why 300?
 		assertEquals("There should be 100 locations", 100, visitedLocationsDTO.size());
 	}
-
-	// kopirati sa tour guida RewardsService i RewardsController i onda ukomponirati
-	// to sve u svoj kod
 }
