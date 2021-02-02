@@ -44,12 +44,19 @@ public class WebService {
 		Location location = new Location(visitedLocationDTO.getLocationDTO().getLatitude(),
 				visitedLocationDTO.getLocationDTO().getLongitude());
 		return new VisitedLocation(visitedLocationDTO.getUserId(), location, visitedLocationDTO.getTimeVisited());
-	}
+	}	
 	
 	public List<VisitedLocationDTO> getAllCurrentLocations() {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<VisitedLocationDTO>> response = restTemplate
 				.exchange(WebController.GPSURL + "/getAllCurrentLocations", HttpMethod.GET, null,new ParameterizedTypeReference<List<VisitedLocationDTO>>() {});
+		return response.getBody();
+	}
+	
+	public String getUserRewards(String userName) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate
+				.exchange(WebController.REWARDSURL + "/getUserRewards", HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();
 	}
 	

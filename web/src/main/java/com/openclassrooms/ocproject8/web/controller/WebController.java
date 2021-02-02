@@ -50,12 +50,17 @@ public class WebController {
     	return webService.getAllCurrentLocations();
     }
     
-    // http://localhost:8080/getRewards?userName=internalUser1
+    // http://localhost:8080/rewards?userName=internalUser1
 	@RequestMapping("/rewards")
 	public String getRewards(@RequestParam String userName) {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(REWARDSURL, String.class);
 		return response.getBody();
+	}
+	
+	@RequestMapping("/getUserRewards")
+	public String getUserRewards(@RequestParam String userName) {
+		return webService.getUserRewards(userName);
 	}
 	
     @RequestMapping("/getTripDeals")

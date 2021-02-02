@@ -36,7 +36,6 @@ public class RewardsController {
 	public String getRewards(@RequestParam String userName) {
 		return JsonStream.serialize(rewardsService.getUserRewards(getUser(userName)));
 	}
-
 	
     //  TODO: Change this method to no longer return a List of Attractions.
  	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
