@@ -3,6 +3,7 @@ package com.openclassrooms.ocproject8.rewards.service;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,10 +72,21 @@ public class RewardsService {
 		return user.getUserRewards();
 	}
 
-	public VisitedLocation getUserLocation(User user) {
+	/*public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
 				: trackUserLocation(user);
 		return visitedLocation;
+	}*/
+	
+	public VisitedLocation getUserLocation(String userName) {
+		Optional<UserEntity> userEntity = userService.getUser(userName);
+		if (userEntity.isPresent()) {
+			User user = new User(userEntity.get());
+			VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
+					: trackUserLocation(user);
+			return visitedLocation;
+		}
+		return null;
 	}
 
 	public VisitedLocation trackUserLocation(User user) {

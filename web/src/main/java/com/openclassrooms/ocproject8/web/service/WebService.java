@@ -16,6 +16,7 @@ import com.openclassrooms.ocproject8.web.controller.WebController;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import tripPricer.Provider;
 
 @Service
 public class WebService {
@@ -51,9 +52,12 @@ public class WebService {
 				.exchange(WebController.GPSURL + "/getAllCurrentLocations", HttpMethod.GET, null,new ParameterizedTypeReference<List<VisitedLocationDTO>>() {});
 		return response.getBody();
 	}
-
-	// TODO inistialise database (private)
-
-	// TODO this will be instanciated by in web service
+	
+	public List<Provider> getTripDeals(String userName) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<List<Provider>> response = restTemplate
+				.exchange(WebController.REWARDSURL + "/getTripDeals", HttpMethod.GET, null,new ParameterizedTypeReference<List<Provider>>() {});
+		return response.getBody();
+	}
 
 }
