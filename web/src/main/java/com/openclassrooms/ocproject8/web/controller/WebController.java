@@ -58,7 +58,7 @@ public class WebController {
 		return response.getBody();
 	}
 	
-	@RequestMapping("/getUserRewards")
+	@RequestMapping("/getRewards")
 	public String getUserRewards(@RequestParam String userName) {
 		return webService.getUserRewards(userName);
 	}

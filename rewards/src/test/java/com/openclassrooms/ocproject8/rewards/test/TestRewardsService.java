@@ -39,6 +39,7 @@ public class TestRewardsService {
 	
 	@Autowired
 	RewardsService rewardsService;
+	
 
 	@Before
 	public void initialise() {
@@ -47,7 +48,8 @@ public class TestRewardsService {
 	
 	@Test
 	public void userGetRewards() {
-		GpsUtil gpsUtil = new GpsUtil();	
+		GpsUtil gpsUtil = new GpsUtil();
+		
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		
 		userService.addUser(new UserEntity(user));
