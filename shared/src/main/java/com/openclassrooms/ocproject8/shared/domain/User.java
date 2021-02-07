@@ -1,6 +1,7 @@
 package com.openclassrooms.ocproject8.shared.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -17,7 +18,7 @@ public class User {
 	private List<VisitedLocation> visitedLocations = new ArrayList<>();
 	private List<UserReward> userRewards = new ArrayList<>();
 	private UserPreferences userPreferences = new UserPreferences();
-	private List<Provider> tripDeals = new ArrayList<>();	
+	private List<Provider> tripDeals = new ArrayList<>();
 	
 	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {
 		this.userId = userId;
@@ -67,7 +68,7 @@ public class User {
 	}
 
 	public List<VisitedLocation> getVisitedLocations() {
-		return visitedLocations;
+		return Collections.synchronizedList(visitedLocations);
 	}
 
 	public void clearVisitedLocations() {
@@ -81,7 +82,7 @@ public class User {
 	}
 
 	public List<UserReward> getUserRewards() {
-		return userRewards;
+		return Collections.synchronizedList(userRewards);
 	}
 
 	public UserPreferences getUserPreferences() {
@@ -101,7 +102,7 @@ public class User {
 	}
 
 	public List<Provider> getTripDeals() {
-		return tripDeals;
+		return Collections.synchronizedList(tripDeals);
 	}
 
 }
