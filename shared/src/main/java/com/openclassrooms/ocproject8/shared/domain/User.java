@@ -15,8 +15,8 @@ public class User {
 	private String phoneNumber;
 	private String emailAddress;
 	private Date latestLocationTimestamp;
-	private List<VisitedLocation> visitedLocations = new ArrayList<>();
-	private List<UserReward> userRewards = new ArrayList<>();
+	private List<VisitedLocation> visitedLocations = Collections.synchronizedList(new ArrayList<>());
+	private List<UserReward> userRewards = Collections.synchronizedList(new ArrayList<>());
 	private UserPreferences userPreferences = new UserPreferences();
 	private List<Provider> tripDeals = new ArrayList<>();
 	
@@ -68,7 +68,7 @@ public class User {
 	}
 
 	public List<VisitedLocation> getVisitedLocations() {
-		return Collections.synchronizedList(visitedLocations);
+		return new ArrayList<>(visitedLocations);
 	}
 
 	public void clearVisitedLocations() {
@@ -82,7 +82,7 @@ public class User {
 	}
 
 	public List<UserReward> getUserRewards() {
-		return Collections.synchronizedList(userRewards);
+		return userRewards;
 	}
 
 	public UserPreferences getUserPreferences() {
@@ -102,7 +102,7 @@ public class User {
 	}
 
 	public List<Provider> getTripDeals() {
-		return Collections.synchronizedList(tripDeals);
+		return tripDeals;
 	}
 
 }

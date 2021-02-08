@@ -50,7 +50,7 @@ public class WebController {
     	return webService.getAllCurrentLocations();
     }
     
-    // http://localhost:8080/rewards?userName=internalUser1
+    // http://localhost:8080/rewards?userName=internalUser1 - works
 	@RequestMapping("/rewards")
 	public String getRewards(@RequestParam String userName) {
 		RestTemplate restTemplate = new RestTemplate();
@@ -58,11 +58,13 @@ public class WebController {
 		return response.getBody();
 	}
 	
+	// don't work
 	@RequestMapping("/getRewards")
 	public String getUserRewards(@RequestParam String userName) {
 		return webService.getUserRewards(userName);
 	}
 	
+	// don't work
     @RequestMapping("/getTripDeals")
     public List<Provider> getTripDeals(@RequestParam String userName) {
     	return webService.getTripDeals(userName);

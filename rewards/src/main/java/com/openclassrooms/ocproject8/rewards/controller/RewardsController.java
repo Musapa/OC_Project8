@@ -32,20 +32,13 @@ public class RewardsController {
 		return "Greetings from RewardsController!";
 	}
 
+	// works
 	@RequestMapping("/getRewards")
 	public String getRewards(@RequestParam String userName) {
 		return JsonStream.serialize(rewardsService.getUserRewards(getUser(userName)));
 	}
-	
-    //  TODO: Change this method to no longer return a List of Attractions.
- 	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
- 	//  Return a new JSON object that contains:
-    	// Name of Tourist attraction, 
-        // Tourist attractions lat/long, 
-        // The user's location lat/long, 
-        // The distance in miles between the user's location and each of the attractions.
-        // The reward points for visiting each Attraction.
-        //    Note: Attraction reward points can be gathered from RewardsCentral
+
+	// works
 	@RequestMapping(value = "/getNearbyAttractions", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<VisitedLocationDTO> getNearbyAttractions(@RequestParam(value = "userName") String userName) {
 		VisitedLocation visitedLocation = rewardsService.getUserLocation(userName);
@@ -54,14 +47,8 @@ public class RewardsController {
 		}
 		return ResponseEntity.ok().body(new VisitedLocationDTO(visitedLocation));
 	}
-/*
-	@RequestMapping("/getNearbyAttractions")
-	public String getNearbyAttractions(@RequestParam String userName) {
-		VisitedLocation visitedLocation = rewardsService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(rewardsService.getNearByAttractions(visitedLocation));
-	}
-*/	
 
+	// works
     @RequestMapping("/getTripDeals")
     public ResponseEntity<List<Provider>> getTripDeals(@RequestParam(value = "userName") String userName) {
     	List<Provider> visitedLocationDTO = rewardsService.getTripDeals(getUser(userName));	
