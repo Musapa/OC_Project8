@@ -18,7 +18,7 @@ public class User {
 	private List<VisitedLocation> visitedLocations = Collections.synchronizedList(new ArrayList<>());
 	private List<UserReward> userRewards = Collections.synchronizedList(new ArrayList<>());
 	private UserPreferences userPreferences = new UserPreferences();
-	private List<Provider> tripDeals = new ArrayList<>();
+	private List<Provider> tripDeals = Collections.synchronizedList(new ArrayList<>());
 	
 	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {
 		this.userId = userId;

@@ -51,12 +51,12 @@ public class WebController {
     }
     
     // http://localhost:8080/rewards?userName=internalUser1 - works
-	@RequestMapping("/rewards")
+	/*@RequestMapping("/rewards")
 	public String getRewards(@RequestParam String userName) {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate.getForEntity(REWARDSURL, String.class);
 		return response.getBody();
-	}
+	}*/
 	
 	// don't work
 	@RequestMapping("/getRewards")

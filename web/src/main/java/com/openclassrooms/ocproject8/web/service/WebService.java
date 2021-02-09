@@ -56,14 +56,14 @@ public class WebService {
 	public String getUserRewards(String userName) {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate
-				.exchange(WebController.REWARDSURL + "/getUserRewards", HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
+				.exchange(WebController.REWARDSURL + "/getRewards?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();
 	}
 	
 	public List<Provider> getTripDeals(String userName) {
 		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<Provider>> response = restTemplate
-				.exchange(WebController.REWARDSURL + "/getTripDeals", HttpMethod.GET, null,new ParameterizedTypeReference<List<Provider>>() {});
+				.exchange(WebController.REWARDSURL + "/getTripDeals?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<List<Provider>>() {});
 		return response.getBody();
 	}
 

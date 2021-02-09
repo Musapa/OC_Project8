@@ -50,7 +50,7 @@ public class RewardsController {
 
 	// works
     @RequestMapping("/getTripDeals")
-    public ResponseEntity<List<Provider>> getTripDeals(@RequestParam(value = "userName") String userName) {
+    public ResponseEntity<List<Provider>> getTripDeals(String userName) {
     	List<Provider> visitedLocationDTO = rewardsService.getTripDeals(getUser(userName));	
     	return ResponseEntity.ok().body(visitedLocationDTO);
     }
