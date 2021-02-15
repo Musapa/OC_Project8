@@ -71,12 +71,6 @@ public class RewardsService {
 	public List<UserReward> getUserRewards(User user) {
 		return user.getUserRewards();
 	}
-
-	/*public VisitedLocation getUserLocation(User user) {
-		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
-				: trackUserLocation(user);
-		return visitedLocation;
-	}*/
 	
 	public VisitedLocation getUserLocation(String userName) {
 		Optional<UserEntity> userEntity = userService.getUser(userName);

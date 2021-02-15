@@ -16,7 +16,6 @@ import com.openclassrooms.ocproject8.web.controller.WebController;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-import tripPricer.Provider;
 
 @Service
 public class WebService {
@@ -60,10 +59,17 @@ public class WebService {
 		return response.getBody();
 	}
 	
-	public List<Provider> getTripDeals(String userName) {
+	public String getTripDeals(String userName) {
 		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<List<Provider>> response = restTemplate
-				.exchange(WebController.REWARDSURL + "/getTripDeals?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<List<Provider>>() {});
+		ResponseEntity<String> response = restTemplate
+				.exchange(WebController.REWARDSURL + "/getTripDeals?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
+		return response.getBody();
+	}
+	
+	public String getNearByAttractions(String userName) {
+		RestTemplate restTemplate = new RestTemplate();
+		ResponseEntity<String> response = restTemplate
+				.exchange(WebController.REWARDSURL + "/getNearByAttractions?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();
 	}
 

@@ -1,4 +1,4 @@
-package com.openclassrooms.ocproject8.gps.test;
+package com.openclassrooms.ocproject8.rewards.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,16 +23,18 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.openclassrooms.ocproject8.gps.GpsApp;
+import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 
+import tripPricer.Provider;
+
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = GpsApp.class)
+@SpringBootTest(classes = RewardsApp.class)
 @ActiveProfiles("test")
 @AutoConfigureTestDatabase(replace = Replace.ANY)
-public class GpsTestController {
+public class TestRewardsController {
 
 	private MockMvc mockMvc;
 
@@ -59,12 +61,17 @@ public class GpsTestController {
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
 	}
-
+	
 	@Test
-	public void getValidLocation() throws Exception {
+	public void getRewards() throws Exception {
+
+	}
+	
+	@Test
+	public void getNearbyAttractions() throws Exception {
 		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
 		if (userEntity.isPresent()) {
-			MvcResult result = mockMvc.perform(get("/getLocation").param("userName", "internalUser1"))
+			MvcResult result = mockMvc.perform(get("/getNearByAttractions").param("userName", "internalUser1"))
 					.andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
 			VisitedLocationDTO visitedLocation = objectMapper.readValue(json, VisitedLocationDTO.class);
@@ -72,22 +79,18 @@ public class GpsTestController {
 			assertEquals("Incorrect user", userEntity.get().getUserId(), visitedLocation.getUserId().toString());
 		}
 	}
-
+	
 	@Test
-	public void getInvalidLocation() throws Exception {
-		mockMvc.perform(get("/getLocation").param("userName", "internalUser")).andExpect(status().isNotFound());
+	public void getTripDeals() throws Exception {
+		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
+		if (userEntity.isPresent()) {
+			MvcResult result = mockMvc.perform(get("/getTripDeals").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();
+			
+			List<Provider> providers = objectMapper.readValue(json, new TypeReference<List<Provider>>() {});
+			
+			assertEquals("There should be 100 providers", 100, providers.size());
+		}
 	}
-
-	@Test
-	public void getAllLocations() throws Exception {
-
-		MvcResult result = mockMvc.perform(get("/getAllCurrentLocations")).andExpect(status().isOk()).andReturn();
-		String json = result.getResponse().getContentAsString();
-		List<VisitedLocationDTO> visitedLocationsDTO = objectMapper.readValue(json,
-				new TypeReference<List<VisitedLocationDTO>>() {
-				});
-
-		// why 300?
-		assertEquals("There should be 100 locations", 100, visitedLocationsDTO.size());
-	}
+	
 }

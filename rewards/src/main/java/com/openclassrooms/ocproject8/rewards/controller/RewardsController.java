@@ -32,14 +32,12 @@ public class RewardsController {
 		return "Greetings from RewardsController!";
 	}
 
-	// works
 	@RequestMapping("/getRewards")
 	public String getRewards(@RequestParam String userName) {
 		return JsonStream.serialize(rewardsService.getUserRewards(getUser(userName)));
 	}
 
-	// works
-	@RequestMapping(value = "/getNearbyAttractions", method = RequestMethod.GET, produces = "application/json")
+	@RequestMapping(value = "/getNearByAttractions", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<VisitedLocationDTO> getNearbyAttractions(@RequestParam(value = "userName") String userName) {
 		VisitedLocation visitedLocation = rewardsService.getUserLocation(userName);
 		if (visitedLocation == null) {
@@ -47,11 +45,11 @@ public class RewardsController {
 		}
 		return ResponseEntity.ok().body(new VisitedLocationDTO(visitedLocation));
 	}
-
-	// works
-    @RequestMapping("/getTripDeals")
-    public ResponseEntity<List<Provider>> getTripDeals(String userName) {
-    	List<Provider> visitedLocationDTO = rewardsService.getTripDeals(getUser(userName));	
-    	return ResponseEntity.ok().body(visitedLocationDTO);
+	
+	@RequestMapping(value = "/getTripDeals", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Provider>> getTripDeals(@RequestParam(value = "userName") String userName) {
+    	List<Provider> providers = rewardsService.getTripDeals(getUser(userName));	
+    	return ResponseEntity.ok().body(providers);
     }
+    
 }
