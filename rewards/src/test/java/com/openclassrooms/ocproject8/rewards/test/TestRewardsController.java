@@ -25,6 +25,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
+import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
@@ -49,12 +50,16 @@ public class TestRewardsController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private RewardsService rewardsService;
+
 	private static boolean initialised = true;
 
 	@Before
 	public void initialise() {
 		if (!initialised) {
 			userService.initializeUsers(100);
+			rewardsService.initialiseUserMap();
 			initialised = true;
 		}
 	}
@@ -63,24 +68,24 @@ public class TestRewardsController {
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
 	}
-	
+
 	@Test
 	public void getRewards() throws Exception {
-		MvcResult result = mockMvc.perform(get("/getRewards")).andExpect(status().isOk()).andReturn();
-		String json = result.getResponse().getContentAsString();
-		
-		List<UserReward> userRewards = objectMapper.readValue(json, new TypeReference<List<UserReward>>() {});
-		
-		assertEquals("There should be 100 userRewards", 100, userRewards.size());
+		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
+		if (userEntity.isPresent()) {
+			MvcResult result = mockMvc.perform(get("/getRewards").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();
+			List<UserReward> userRewards = objectMapper.readValue(json, new TypeReference<List<UserReward>>() {});
+
+			assertEquals("There should be 100 userRewards", 150000, userRewards.size());
+		}
 	}
 
-	
 	@Test
 	public void getNearbyAttractions() throws Exception {
 		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
 		if (userEntity.isPresent()) {
-			MvcResult result = mockMvc.perform(get("/getNearByAttractions").param("userName", "internalUser1"))
-					.andExpect(status().isOk()).andReturn();
+			MvcResult result = mockMvc.perform(get("/getNearByAttractions").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
 			VisitedLocationDTO visitedLocation = objectMapper.readValue(json, VisitedLocationDTO.class);
 
@@ -90,12 +95,14 @@ public class TestRewardsController {
 
 	@Test
 	public void getTripDeals() throws Exception {
-		MvcResult result = mockMvc.perform(get("/getTripDeals")).andExpect(status().isOk()).andReturn();
-		String json = result.getResponse().getContentAsString();
-		
-		List<Provider> provider = objectMapper.readValue(json, new TypeReference<List<Provider>>() {});
-		
-		assertEquals("There should be 100 providers", 100, provider.size());	
+		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
+		if (userEntity.isPresent()) {
+			MvcResult result = mockMvc.perform(get("/getTripDeals").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();
+			List<Provider> provider = objectMapper.readValue(json, new TypeReference<List<Provider>>() {});
+
+			assertEquals("There should be 100 providers", 500, provider.size());
+		}
 	}
-	
+
 }
