@@ -1,6 +1,7 @@
 package com.openclassrooms.ocproject8.rewards.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +27,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
-import com.openclassrooms.ocproject8.shared.domain.User;
+import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
@@ -53,13 +55,18 @@ public class TestRewardsController {
 	@Autowired
 	private RewardsService rewardsService;
 
-	private static boolean initialised = true;
+	private static boolean initialised = false;
 
 	@Before
 	public void initialise() {
 		if (!initialised) {
 			userService.initializeUsers(100);
 			rewardsService.initialiseUserMap();
+			try {
+				Tracker tracker = new Tracker(rewardsService, userService);
+				Thread.sleep(500);
+			} catch (InterruptedException e) {
+			}
 			initialised = true;
 		}
 	}
@@ -71,14 +78,11 @@ public class TestRewardsController {
 
 	@Test
 	public void getRewards() throws Exception {
-		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
-		if (userEntity.isPresent()) {
 			MvcResult result = mockMvc.perform(get("/getRewards").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
 			List<UserReward> userRewards = objectMapper.readValue(json, new TypeReference<List<UserReward>>() {});
 
-			assertEquals("There should be 100 userRewards", 150000, userRewards.size());
-		}
+			assertNotEquals("There should be at least 1 userReward", 0, userRewards.size());
 	}
 
 	@Test
@@ -95,14 +99,11 @@ public class TestRewardsController {
 
 	@Test
 	public void getTripDeals() throws Exception {
-		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
-		if (userEntity.isPresent()) {
 			MvcResult result = mockMvc.perform(get("/getTripDeals").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
 			List<Provider> provider = objectMapper.readValue(json, new TypeReference<List<Provider>>() {});
 
 			assertEquals("There should be 100 providers", 500, provider.size());
-		}
 	}
 
 }
