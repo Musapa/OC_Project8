@@ -82,8 +82,8 @@ public class TestRewardsController {
 	public void getRewards() throws Exception {
 			MvcResult result = mockMvc.perform(get("/getRewards").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
-			List<UserReward> userRewards = objectMapper.readValue(json, new TypeReference<List<UserReward>>() {});
-			//List<UserReward> userRewards = JsonIterator.deserialize(json, new TypeLiteral <List<UserReward>>() {});
+			//List<UserReward> userRewards = objectMapper.readValue(json, new TypeReference<List<UserReward>>() {});
+			List<UserReward> userRewards = JsonIterator.deserialize(json, new TypeLiteral <List<UserReward>>() {});
 
 			assertNotEquals("There should be at least 1 userReward", 0, userRewards.size());
 	}
@@ -104,7 +104,9 @@ public class TestRewardsController {
 	public void getTripDeals() throws Exception {
 			MvcResult result = mockMvc.perform(get("/getTripDeals").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
-			List<Provider> provider = objectMapper.readValue(json, new TypeReference<List<Provider>>() {});
+			//List<Provider> provider = objectMapper.readValue(json, new TypeReference<List<Provider>>() {});
+			
+			List<Provider> provider = JsonIterator.deserialize(json, new TypeLiteral <List<Provider>>() {});
 
 			assertEquals("There should be 100 providers", 500, provider.size());
 	}
