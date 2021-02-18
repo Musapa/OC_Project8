@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +24,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jsoniter.JsonIterator;
+import com.jsoniter.spi.TypeLiteral;
 import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
@@ -64,7 +65,8 @@ public class TestRewardsController {
 			rewardsService.initialiseUserMap();
 			try {
 				Tracker tracker = new Tracker(rewardsService, userService);
-				Thread.sleep(500);
+				tracker.creatingRewards();
+				Thread.sleep(200);
 			} catch (InterruptedException e) {
 			}
 			initialised = true;
@@ -81,6 +83,7 @@ public class TestRewardsController {
 			MvcResult result = mockMvc.perform(get("/getRewards").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
 			List<UserReward> userRewards = objectMapper.readValue(json, new TypeReference<List<UserReward>>() {});
+			//List<UserReward> userRewards = JsonIterator.deserialize(json, new TypeLiteral <List<UserReward>>() {});
 
 			assertNotEquals("There should be at least 1 userReward", 0, userRewards.size());
 	}
