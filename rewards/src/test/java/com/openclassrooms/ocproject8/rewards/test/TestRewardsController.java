@@ -2,6 +2,7 @@ package com.openclassrooms.ocproject8.rewards.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -77,15 +78,22 @@ public class TestRewardsController {
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
 	}
-
+	
 	@Test
 	public void getRewards() throws Exception {
-			MvcResult result = mockMvc.perform(get("/getRewards").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
-			String json = result.getResponse().getContentAsString();
-			//List<UserReward> userRewards = objectMapper.readValue(json, new TypeReference<List<UserReward>>() {});
-			List<UserReward> userRewards = JsonIterator.deserialize(json, new TypeLiteral <List<UserReward>>() {});
+		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
+		if (userEntity.isPresent()) {
+			UserEntity user = userEntity.get();
+			String uuid = user.getUserId().toString();
+			String userName = user.getUserName();
+			MvcResult result = mockMvc.perform(get("/getRewards").param("userName", userName)).andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();	
 
-			assertNotEquals("There should be at least 1 userReward", 0, userRewards.size());
+			assertNotEquals("There should be 1 user in userReward", 0, json.indexOf(uuid));
+		}
+		else {
+			fail("Missing user");
+		}
 	}
 
 	@Test
@@ -99,16 +107,22 @@ public class TestRewardsController {
 			assertEquals("Incorrect user", userEntity.get().getUserId(), visitedLocation.getUserId().toString());
 		}
 	}
-
+	
 	@Test
 	public void getTripDeals() throws Exception {
-			MvcResult result = mockMvc.perform(get("/getTripDeals").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
-			String json = result.getResponse().getContentAsString();
-			//List<Provider> provider = objectMapper.readValue(json, new TypeReference<List<Provider>>() {});
-			
-			List<Provider> provider = JsonIterator.deserialize(json, new TypeLiteral <List<Provider>>() {});
+		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
+		if (userEntity.isPresent()) {
+			UserEntity user = userEntity.get();
+			String uuid = user.getUserId().toString();
+			String userName = user.getUserName();
+			MvcResult result = mockMvc.perform(get("/getTripDeals").param("userName", userName)).andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();	
 
-			assertEquals("There should be 100 providers", 500, provider.size());
+			assertNotEquals("There should be 1 user in provider", 0, json.indexOf(uuid));
+		}
+		else {
+			fail("Missing user");
+		}
 	}
 
 }
