@@ -17,11 +17,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
+import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
+import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 
 import gpsUtil.GpsUtil;
@@ -40,10 +44,13 @@ public class TestRewardsService {
 	@Autowired
 	RewardsService rewardsService;
 	
-
+	@Autowired
+	private ObjectMapper objectMapper;
+		
 	@Before
 	public void initialise() {
-		userService.deleteAll();
+		userService.initializeUsers(100);
+		//userService.deleteAll();
 	}
 	
 	@Test
@@ -79,7 +86,7 @@ public class TestRewardsService {
 		List<UserReward> userRewards = rewardsService.getUserRewards(user);
 		rewardsService.tracker.stopTracking();
 
-		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
+		assertEquals("from gpsUtil: " + gpsUtil.getAttractions().size(), "from userRewards: " + userRewards.size());
 	}
 	
 }
