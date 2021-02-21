@@ -17,15 +17,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
-import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 
 import gpsUtil.GpsUtil;
@@ -43,14 +40,17 @@ public class TestRewardsService {
 	
 	@Autowired
 	RewardsService rewardsService;
-	
-	@Autowired
-	private ObjectMapper objectMapper;
-		
+
 	@Before
 	public void initialise() {
-		userService.initializeUsers(100);
-		//userService.deleteAll();
+		//userService.initializeUsers(100);
+		userService.deleteAll();
+		try {
+			Tracker tracker = new Tracker(rewardsService, userService);
+			tracker.creatingRewards();
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+		}
 	}
 	
 	@Test
