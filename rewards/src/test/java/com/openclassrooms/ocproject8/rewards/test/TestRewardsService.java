@@ -43,28 +43,20 @@ public class TestRewardsService {
 
 	@Before
 	public void initialise() {
-		//userService.initializeUsers(100);
-		userService.deleteAll();
-		try {
-			Tracker tracker = new Tracker(rewardsService, userService);
-			tracker.creatingRewards();
-			Thread.sleep(200);
-		} catch (InterruptedException e) {
-		}
+		userService.initializeUsers(100);
+		rewardsService.initialiseUserMap();
 	}
 	
 	@Test
 	public void userGetRewards() {
 		GpsUtil gpsUtil = new GpsUtil();
 		
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		User user = rewardsService.getUser("internalUser1");
 		
-		userService.addUser(new UserEntity(user));
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		rewardsService.trackUserLocation(user);
 		List<UserReward> userRewards = user.getUserRewards();
-		rewardsService.tracker.stopTracking();
 		assertTrue(userRewards.size() == 1);
 	}
 	
@@ -85,7 +77,6 @@ public class TestRewardsService {
 		rewardsService.calculateRewards(user);
 		List<UserReward> userRewards = rewardsService.getUserRewards(user);
 		rewardsService.tracker.stopTracking();
-
 		assertEquals("from gpsUtil: " + gpsUtil.getAttractions().size(), "from userRewards: " + userRewards.size());
 	}
 	
