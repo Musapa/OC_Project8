@@ -64,12 +64,8 @@ public class TestRewardsController {
 		if (!initialised) {
 			userService.initializeUsers(100);
 			rewardsService.initialiseUserMap();
-			try {
-				Tracker tracker = new Tracker(rewardsService, userService);
-				tracker.creatingRewards();
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-			}
+			Tracker tracker = new Tracker(rewardsService, userService);
+			tracker.creatingRewards();
 			initialised = true;
 		}
 	}
