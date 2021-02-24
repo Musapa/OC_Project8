@@ -5,7 +5,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +20,6 @@ import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
 import com.openclassrooms.ocproject8.shared.domain.User;
-import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 
@@ -50,6 +48,7 @@ public class TestRewardsService {
 			rewardsService.initialiseUserMap();
 			Tracker tracker = new Tracker(rewardsService, userService);
 			tracker.creatingRewards();
+			//userService.deleteAll();
 		}
 	}
 	

@@ -68,7 +68,7 @@ public class User {
 	}
 
 	public List<VisitedLocation> getVisitedLocations() {
-		return new ArrayList<>(visitedLocations);
+		return Collections.synchronizedList(new ArrayList<>(visitedLocations));
 	}
 
 	public void clearVisitedLocations() {
@@ -81,9 +81,9 @@ public class User {
 			userRewards.add(userReward);
 		}*/
 	}
-
+	
 	public List<UserReward> getUserRewards() {
-		return userRewards;
+		return Collections.synchronizedList(new ArrayList<>(userRewards));
 	}
 
 	public UserPreferences getUserPreferences() {

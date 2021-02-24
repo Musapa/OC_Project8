@@ -6,7 +6,6 @@ import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
@@ -23,19 +22,13 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jsoniter.JsonIterator;
-import com.jsoniter.spi.TypeLiteral;
 import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
-import com.openclassrooms.ocproject8.shared.domain.UserReward;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.service.UserService;
-
-import tripPricer.Provider;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RewardsApp.class)
