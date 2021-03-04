@@ -59,16 +59,6 @@ public class TestWebController {
 
 	private MockRestServiceServer mockServer;
 
-	private static boolean initialised = false;
-
-	@Before
-	public void initialise() {
-		if (!initialised) {
-			userService.initializeUsers(100);
-			initialised = true;
-		}
-	}
-
 	@Before
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
