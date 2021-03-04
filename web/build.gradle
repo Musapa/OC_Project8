@@ -37,6 +37,8 @@ dependencies {
 	compile(name:'gpsUtil', ext:'jar')
 	compile(name:'RewardCentral', ext:'jar')
 	compile(name:'TripPricer', ext:'jar')
+	
+	testCompile group: 'com.h2database', name: 'h2', version: '1.3.148'
 }
 
 test {
