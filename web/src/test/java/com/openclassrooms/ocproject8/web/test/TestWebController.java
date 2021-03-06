@@ -20,6 +20,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -29,7 +30,7 @@ import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.jsoniter.output.JsonStream;
@@ -56,13 +57,21 @@ public class TestWebController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	private MockRestServiceServer mockServer;
-
+	
 	@Before
+    public void init() {
+        mockServer = MockRestServiceServer.createServer(restTemplate);
+    }
+
+	/*@Before
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
-	}
+	}*/
 
 	@Test
 	public void getRewards() throws Exception {
@@ -95,6 +104,7 @@ public class TestWebController {
 			fail("Missing user");
 		}
 	}
+
 	// don't serialize tests
 	// same as testRewardsController
 }
