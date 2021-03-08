@@ -2,6 +2,7 @@ package com.openclassrooms.ocproject8.web.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,9 @@ import gpsUtil.location.VisitedLocation;
 
 @Service
 public class WebService {
+	
+	@Autowired
+	private RestTemplate restTemplate;
 
 	private UserService userService;
 
@@ -35,7 +39,6 @@ public class WebService {
 
 
 	public VisitedLocation getUserLocation(String userName) throws Exception {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<VisitedLocationDTO> response = restTemplate
 				.getForEntity(WebController.GPSURL + "/getLocation?userName=" + userName, VisitedLocationDTO.class);
 		// TODO check response entity is not found
@@ -46,28 +49,24 @@ public class WebService {
 	}	
 	
 	public List<VisitedLocationDTO> getAllCurrentLocations() {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<List<VisitedLocationDTO>> response = restTemplate
 				.exchange(WebController.GPSURL + "/getAllCurrentLocations", HttpMethod.GET, null,new ParameterizedTypeReference<List<VisitedLocationDTO>>() {});
 		return response.getBody();
 	}
 	
 	public String getUserRewards(String userName) {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate
 				.exchange(WebController.REWARDSURL + "/getRewards?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();
 	}
 	
 	public String getTripDeals(String userName) {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate
 				.exchange(WebController.REWARDSURL + "/getTripDeals?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();
 	}
 	
 	public String getNearByAttractions(String userName) {
-		RestTemplate restTemplate = new RestTemplate();
 		ResponseEntity<String> response = restTemplate
 				.exchange(WebController.REWARDSURL + "/getNearByAttractions?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();

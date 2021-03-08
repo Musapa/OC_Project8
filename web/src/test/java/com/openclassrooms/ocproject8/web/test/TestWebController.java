@@ -1,5 +1,6 @@
 package com.openclassrooms.ocproject8.web.test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -12,7 +13,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -30,6 +29,7 @@ import org.springframework.test.web.client.ExpectedCount;
 import org.springframework.test.web.client.MockRestServiceServer;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -68,17 +68,16 @@ public class TestWebController {
         mockServer = MockRestServiceServer.createServer(restTemplate);
     }
 
-	/*@Before
+	@Before
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
-	}*/
-
+	}
+	
 	@Test
 	public void getRewards() throws Exception {
 
 		GpsUtil gpsUtil = new GpsUtil();
 		Attraction attraction = gpsUtil.getAttractions().get(0);
-
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
 		
@@ -89,7 +88,7 @@ public class TestWebController {
 			UserReward userRewards = new UserReward(visitedLocation, attraction, 10);
 			String inputJson = JsonStream.serialize(userRewards);
 			mockServer
-					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "/getRewards?userName=" + userName)))
+					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getRewards?userName=" + userName)))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
 
@@ -98,13 +97,75 @@ public class TestWebController {
 			String json = result.getResponse().getContentAsString();
 
 			mockServer.verify();
-			Assert.assertEquals(inputJson, json);
+			assertEquals(inputJson, json);
 			// TODO check username is in the json
 		} else {
 			fail("Missing user");
 		}
 	}
+	
+	@Test
+	public void getNearByAttractions() throws Exception {
+		
+		GpsUtil gpsUtil = new GpsUtil();
+		Attraction attraction = gpsUtil.getAttractions().get(0);
+		String userName = "internalUser1";
+		Optional<UserEntity> userEntity = userService.getUser(userName);
+		
+		if (userEntity.isPresent()) {
+			UserEntity user = userEntity.get();
+			String uuid = user.getUserId().toString();
+			VisitedLocation visitedLocation = new VisitedLocation(UUID.fromString(uuid), attraction, new Date());
+			UserReward userRewards = new UserReward(visitedLocation, attraction, 10);
+			String inputJson = JsonStream.serialize(userRewards);
+			mockServer
+					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getNearByAttractions?userName=" + userName)))
+					.andExpect(method(HttpMethod.GET))
+					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
 
-	// don't serialize tests
-	// same as testRewardsController
+			MvcResult result = mockMvc.perform(get("/getNearByAttractions").param("userName", userName))
+					.andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();
+
+			mockServer.verify();
+			assertEquals(inputJson, json);
+
+		} else {
+			fail("Missing user");
+		}
+	}
+	
+	@Test
+	public void getTripDeals() throws Exception {
+		
+		GpsUtil gpsUtil = new GpsUtil();
+		Attraction attraction = gpsUtil.getAttractions().get(0);
+		String userName = "internalUser1";
+		Optional<UserEntity> userEntity = userService.getUser(userName);
+		
+		if (userEntity.isPresent()) {
+			UserEntity user = userEntity.get();
+			String uuid = user.getUserId().toString();
+			VisitedLocation visitedLocation = new VisitedLocation(UUID.fromString(uuid), attraction, new Date());
+			UserReward userRewards = new UserReward(visitedLocation, attraction, 10);
+			String inputJson = JsonStream.serialize(userRewards);
+			mockServer
+					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getTripDeals?userName=" + userName)))
+					.andExpect(method(HttpMethod.GET))
+					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
+
+			MvcResult result = mockMvc.perform(get("/getTripDeals").param("userName", userName))
+					.andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();
+
+			mockServer.verify();
+			assertEquals(inputJson, json);
+
+		} else {
+			fail("Missing user");
+		}
+	}
+	
+
+
 }
