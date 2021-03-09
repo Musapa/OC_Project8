@@ -10,6 +10,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.net.URI;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -33,9 +34,11 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
+import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.service.UserService;
 import com.openclassrooms.ocproject8.web.WebApp;
 import com.openclassrooms.ocproject8.web.controller.WebController;
@@ -71,6 +74,38 @@ public class TestWebController {
 	@Before
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
+	}
+	
+	
+	@Test
+	public void getAllCurrentLocations() throws Exception {
+
+		GpsUtil gpsUtil = new GpsUtil();
+		Attraction attraction = gpsUtil.getAttractions().get(0);
+		String userName = "internalUser1";
+		Optional<UserEntity> userEntity = userService.getUser(userName);
+		
+		if (userEntity.isPresent()) {
+			UserEntity user = userEntity.get();
+			String uuid = user.getUserId().toString();
+			VisitedLocation visitedLocation = new VisitedLocation(UUID.fromString(uuid), attraction, new Date());
+			UserReward userRewards = new UserReward(visitedLocation, attraction, 10);
+			
+			String inputJson = JsonStream.serialize(userRewards);
+			mockServer
+					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getAllCurrentLocations?userName=" + userName)))
+					.andExpect(method(HttpMethod.GET))
+					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
+
+			MvcResult result = mockMvc.perform(get("/getAllCurrentLocations").param("userName", userName))
+					.andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();
+
+			mockServer.verify();
+			assertEquals(inputJson, json);
+		} else {
+			fail("Missing user");
+		}
 	}
 	
 	@Test

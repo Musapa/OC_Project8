@@ -29,13 +29,6 @@ public class WebController {
 		return "Greetings from WebController!";
 	}
 
-	@RequestMapping("/gps")
-	public String getGps() {
-		RestTemplate restTemplate = new RestTemplate();
-		ResponseEntity<String> response = restTemplate.getForEntity(GPSURL, String.class);
-		return response.getBody();
-	}
-
 	@RequestMapping("/getLocation")
 	public String getLocation(@RequestParam String userName) throws Exception {
 		VisitedLocation visitedLocation = webService.getUserLocation(userName);
