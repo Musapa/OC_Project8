@@ -93,11 +93,11 @@ public class TestWebController {
 			
 			String inputJson = JsonStream.serialize(userRewards);
 			mockServer
-					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getAllCurrentLocations?userName=" + userName)))
+					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getAllCurrentLocations" /*+ userName*/)))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
 
-			MvcResult result = mockMvc.perform(get("/getAllCurrentLocations").param("userName", userName))
+			MvcResult result = mockMvc.perform(get("/getAllCurrentLocations"))
 					.andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
 
