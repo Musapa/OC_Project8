@@ -1,6 +1,7 @@
 package com.openclassrooms.ocproject8.web.test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.method;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.requestTo;
@@ -9,6 +10,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.net.URI;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jsoniter.output.JsonStream;
+import com.openclassrooms.ocproject8.shared.domain.LocationDTO;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.UserReward;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
@@ -45,7 +48,9 @@ import com.openclassrooms.ocproject8.web.controller.WebController;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import tripPricer.Provider;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = WebApp.class)
@@ -76,10 +81,8 @@ public class TestWebController {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
 	}
 	
-	
 	@Test
-	public void getAllCurrentLocations() throws Exception {
-
+	public void getLocation() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		String userName = "internalUser1";
@@ -87,13 +90,46 @@ public class TestWebController {
 		
 		if (userEntity.isPresent()) {
 			UserEntity user = userEntity.get();
-			String uuid = user.getUserId().toString();
-			VisitedLocation visitedLocation = new VisitedLocation(UUID.fromString(uuid), attraction, new Date());
-			UserReward userRewards = new UserReward(visitedLocation, attraction, 10);
+			UUID uuid = UUID.fromString(user.getUserId());
+
+			Location location = new Location(15, 25);
+		    VisitedLocation visitedLocation = new VisitedLocation(uuid, location, new Date());
 			
-			String inputJson = JsonStream.serialize(userRewards);
+			String inputJson = JsonStream.serialize(visitedLocation);
 			mockServer
-					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getAllCurrentLocations" /*+ userName*/)))
+					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getLocation?userName=" + userName)))
+					.andExpect(method(HttpMethod.GET))
+					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
+
+			MvcResult result = mockMvc.perform(get("/getLocation").param("userName", userName))
+					.andExpect(status().isOk()).andReturn();
+			String json = result.getResponse().getContentAsString();
+
+			mockServer.verify();
+			assertEquals(inputJson, json);
+		} else {
+			fail("Missing user");
+		}
+	}
+	
+	@Test
+	public void getAllCurrentLocations() throws Exception {
+		GpsUtil gpsUtil = new GpsUtil();
+		Attraction attraction = gpsUtil.getAttractions().get(0);
+		String userName = "internalUser1";
+		Optional<UserEntity> userEntity = userService.getUser(userName);
+		
+		if (userEntity.isPresent()) {
+			UserEntity user = userEntity.get();
+			UUID uuid = UUID.fromString(user.getUserId());
+			//TODO this return list of VisitedLoacaitonDTO
+			List<VisitedLocationDTO> visitedLocations = new ArrayList<VisitedLocationDTO>();
+			LocationDTO locationDTO = new LocationDTO(106, 15);
+			visitedLocations.add(new VisitedLocationDTO(uuid, new Date(), locationDTO));
+			
+			String inputJson = JsonStream.serialize(visitedLocations);
+			mockServer
+					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getAllCurrentLocations")))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
 
@@ -133,7 +169,7 @@ public class TestWebController {
 
 			mockServer.verify();
 			assertEquals(inputJson, json);
-			// TODO check username is in the json
+			assertNotEquals("There should be 1 user in userReward", 0, json.indexOf(uuid));
 		} else {
 			fail("Missing user");
 		}
@@ -148,16 +184,15 @@ public class TestWebController {
 		Optional<UserEntity> userEntity = userService.getUser(userName);
 		
 		if (userEntity.isPresent()) {
-			UserEntity user = userEntity.get();
-			String uuid = user.getUserId().toString();
-			VisitedLocation visitedLocation = new VisitedLocation(UUID.fromString(uuid), attraction, new Date());
-			UserReward userRewards = new UserReward(visitedLocation, attraction, 10);
-			String inputJson = JsonStream.serialize(userRewards);
+			List<Attraction> nearbyAttractions = new ArrayList<Attraction>();
+			nearbyAttractions.add(attraction);
+		
+			String inputJson = JsonStream.serialize(nearbyAttractions);
 			mockServer
 					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getNearByAttractions?userName=" + userName)))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
-
+			
 			MvcResult result = mockMvc.perform(get("/getNearByAttractions").param("userName", userName))
 					.andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
@@ -172,18 +207,14 @@ public class TestWebController {
 	
 	@Test
 	public void getTripDeals() throws Exception {
-		
-		GpsUtil gpsUtil = new GpsUtil();
-		Attraction attraction = gpsUtil.getAttractions().get(0);
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
 		
 		if (userEntity.isPresent()) {
-			UserEntity user = userEntity.get();
-			String uuid = user.getUserId().toString();
-			VisitedLocation visitedLocation = new VisitedLocation(UUID.fromString(uuid), attraction, new Date());
-			UserReward userRewards = new UserReward(visitedLocation, attraction, 10);
-			String inputJson = JsonStream.serialize(userRewards);
+			List<Provider> providers = new ArrayList<Provider>();
+			providers.addAll(providers);
+
+			String inputJson = JsonStream.serialize(providers);
 			mockServer
 					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getTripDeals?userName=" + userName)))
 					.andExpect(method(HttpMethod.GET))

@@ -14,6 +14,7 @@ import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.shared.domain.User;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 
+import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
@@ -38,12 +39,10 @@ public class RewardsController {
 	}
 
 	@RequestMapping(value = "/getNearByAttractions", method = RequestMethod.GET, produces = "application/json")
-	public ResponseEntity<VisitedLocationDTO> getNearbyAttractions(@RequestParam(value = "userName") String userName) {
+	public String getNearbyAttractions(@RequestParam(value = "userName") String userName) {
 		VisitedLocation visitedLocation = rewardsService.getUserLocation(userName);
-		if (visitedLocation == null) {
-			return ResponseEntity.notFound().build();
-		}
-		return ResponseEntity.ok().body(new VisitedLocationDTO(visitedLocation));
+		
+		return JsonStream.serialize(rewardsService.getNearByAttractions(visitedLocation));
 	}
 	
 	@RequestMapping(value = "/getTripDeals", method = RequestMethod.GET, produces = "application/json")
