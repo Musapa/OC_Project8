@@ -37,6 +37,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.shared.domain.LocationDTO;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
@@ -71,6 +72,9 @@ public class TestWebController {
 
 	private MockRestServiceServer mockServer;
 	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
 	@Before
     public void init() {
         mockServer = MockRestServiceServer.createServer(restTemplate);
@@ -92,8 +96,8 @@ public class TestWebController {
 			UserEntity user = userEntity.get();
 			UUID uuid = UUID.fromString(user.getUserId());
 
-			Location location = new Location(15, 25);
-		    VisitedLocation visitedLocation = new VisitedLocation(uuid, location, new Date());
+			LocationDTO location = new LocationDTO(25.00, 15.00);
+			VisitedLocationDTO visitedLocation = new VisitedLocationDTO(uuid, new Date(), location);
 			
 			String inputJson = JsonStream.serialize(visitedLocation);
 			mockServer
@@ -114,20 +118,17 @@ public class TestWebController {
 	
 	@Test
 	public void getAllCurrentLocations() throws Exception {
-		GpsUtil gpsUtil = new GpsUtil();
-		Attraction attraction = gpsUtil.getAttractions().get(0);
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
 		
 		if (userEntity.isPresent()) {
 			UserEntity user = userEntity.get();
 			UUID uuid = UUID.fromString(user.getUserId());
-			//TODO this return list of VisitedLoacaitonDTO
 			List<VisitedLocationDTO> visitedLocations = new ArrayList<VisitedLocationDTO>();
 			LocationDTO locationDTO = new LocationDTO(106, 15);
 			visitedLocations.add(new VisitedLocationDTO(uuid, new Date(), locationDTO));
 			
-			String inputJson = JsonStream.serialize(visitedLocations);
+			String inputJson = objectMapper.writeValueAsString(visitedLocations);
 			mockServer
 					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getAllCurrentLocations")))
 					.andExpect(method(HttpMethod.GET))
@@ -146,17 +147,14 @@ public class TestWebController {
 	
 	@Test
 	public void getRewards() throws Exception {
-
-		GpsUtil gpsUtil = new GpsUtil();
-		Attraction attraction = gpsUtil.getAttractions().get(0);
+		
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
 		
 		if (userEntity.isPresent()) {
 			UserEntity user = userEntity.get();
 			String uuid = user.getUserId().toString();
-			VisitedLocation visitedLocation = new VisitedLocation(UUID.fromString(uuid), attraction, new Date());
-			UserReward userRewards = new UserReward(visitedLocation, attraction, 10);
+			List<UserReward> userRewards = new ArrayList<UserReward>();
 			String inputJson = JsonStream.serialize(userRewards);
 			mockServer
 					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getRewards?userName=" + userName)))
