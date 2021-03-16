@@ -36,7 +36,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.shared.domain.LocationDTO;
@@ -49,8 +48,6 @@ import com.openclassrooms.ocproject8.web.controller.WebController;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
 @RunWith(SpringRunner.class)
@@ -66,42 +63,42 @@ public class TestWebController {
 
 	@Autowired
 	private UserService userService;
-	
+
 	@Autowired
 	private RestTemplate restTemplate;
 
 	private MockRestServiceServer mockServer;
-	
+
 	@Autowired
 	private ObjectMapper objectMapper;
-	
+
 	@Before
-    public void init() {
-        mockServer = MockRestServiceServer.createServer(restTemplate);
-    }
+	public void init() {
+		mockServer = MockRestServiceServer.createServer(restTemplate);
+	}
 
 	@Before
 	public void setupMockmvc() {
 		mockMvc = MockMvcBuilders.webAppContextSetup(webContext).build();
 	}
-	
+
 	@Test
 	public void getLocation() throws Exception {
-		GpsUtil gpsUtil = new GpsUtil();
-		Attraction attraction = gpsUtil.getAttractions().get(0);
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
-		
+
 		if (userEntity.isPresent()) {
 			UserEntity user = userEntity.get();
 			UUID uuid = UUID.fromString(user.getUserId());
 
-			LocationDTO location = new LocationDTO(25.00, 15.00);
+			LocationDTO location = new LocationDTO(25, 15);
 			VisitedLocationDTO visitedLocation = new VisitedLocationDTO(uuid, new Date(), location);
-			
-			String inputJson = JsonStream.serialize(visitedLocation);
+
+			String inputJson = objectMapper.writeValueAsString(visitedLocation);
+
 			mockServer
-					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getLocation?userName=" + userName)))
+					.expect(ExpectedCount.once(),
+							requestTo(new URI(WebController.GPSURL + "getLocation?userName=" + userName)))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
 
@@ -110,32 +107,31 @@ public class TestWebController {
 			String json = result.getResponse().getContentAsString();
 
 			mockServer.verify();
-			assertEquals(inputJson, json);
+			assertNotEquals("User is not present in visitedLocation", 0, json.indexOf(uuid.toString()));
+
 		} else {
 			fail("Missing user");
 		}
 	}
-	
+
 	@Test
 	public void getAllCurrentLocations() throws Exception {
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
-		
+
 		if (userEntity.isPresent()) {
 			UserEntity user = userEntity.get();
 			UUID uuid = UUID.fromString(user.getUserId());
 			List<VisitedLocationDTO> visitedLocations = new ArrayList<VisitedLocationDTO>();
 			LocationDTO locationDTO = new LocationDTO(106, 15);
 			visitedLocations.add(new VisitedLocationDTO(uuid, new Date(), locationDTO));
-			
+
 			String inputJson = objectMapper.writeValueAsString(visitedLocations);
-			mockServer
-					.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getAllCurrentLocations")))
+			mockServer.expect(ExpectedCount.once(), requestTo(new URI(WebController.GPSURL + "getAllCurrentLocations")))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
 
-			MvcResult result = mockMvc.perform(get("/getAllCurrentLocations"))
-					.andExpect(status().isOk()).andReturn();
+			MvcResult result = mockMvc.perform(get("/getAllCurrentLocations")).andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
 
 			mockServer.verify();
@@ -144,20 +140,21 @@ public class TestWebController {
 			fail("Missing user");
 		}
 	}
-	
+
 	@Test
 	public void getRewards() throws Exception {
-		
+
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
-		
+
 		if (userEntity.isPresent()) {
 			UserEntity user = userEntity.get();
 			String uuid = user.getUserId().toString();
 			List<UserReward> userRewards = new ArrayList<UserReward>();
 			String inputJson = JsonStream.serialize(userRewards);
 			mockServer
-					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getRewards?userName=" + userName)))
+					.expect(ExpectedCount.once(),
+							requestTo(new URI(WebController.REWARDSURL + "getRewards?userName=" + userName)))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
 
@@ -172,25 +169,26 @@ public class TestWebController {
 			fail("Missing user");
 		}
 	}
-	
+
 	@Test
 	public void getNearByAttractions() throws Exception {
-		
+
 		GpsUtil gpsUtil = new GpsUtil();
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
-		
+
 		if (userEntity.isPresent()) {
 			List<Attraction> nearbyAttractions = new ArrayList<Attraction>();
 			nearbyAttractions.add(attraction);
-		
+
 			String inputJson = JsonStream.serialize(nearbyAttractions);
 			mockServer
-					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getNearByAttractions?userName=" + userName)))
+					.expect(ExpectedCount.once(),
+							requestTo(new URI(WebController.REWARDSURL + "getNearByAttractions?userName=" + userName)))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
-			
+
 			MvcResult result = mockMvc.perform(get("/getNearByAttractions").param("userName", userName))
 					.andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
@@ -202,19 +200,20 @@ public class TestWebController {
 			fail("Missing user");
 		}
 	}
-	
+
 	@Test
 	public void getTripDeals() throws Exception {
 		String userName = "internalUser1";
 		Optional<UserEntity> userEntity = userService.getUser(userName);
-		
+
 		if (userEntity.isPresent()) {
 			List<Provider> providers = new ArrayList<Provider>();
 			providers.addAll(providers);
 
 			String inputJson = JsonStream.serialize(providers);
 			mockServer
-					.expect(ExpectedCount.once(), requestTo(new URI(WebController.REWARDSURL + "getTripDeals?userName=" + userName)))
+					.expect(ExpectedCount.once(),
+							requestTo(new URI(WebController.REWARDSURL + "getTripDeals?userName=" + userName)))
 					.andExpect(method(HttpMethod.GET))
 					.andRespond(withStatus(HttpStatus.OK).contentType(MediaType.APPLICATION_JSON).body(inputJson));
 
@@ -229,7 +228,5 @@ public class TestWebController {
 			fail("Missing user");
 		}
 	}
-	
-
 
 }

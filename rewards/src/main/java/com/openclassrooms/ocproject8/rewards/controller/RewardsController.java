@@ -12,9 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.shared.domain.User;
-import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 
-import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
