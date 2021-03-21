@@ -1,6 +1,5 @@
 rootProject.name = 'OC_project8'
 
-include 'web'
-include 'gps'
-include 'rewards'
-include 'shared'
+include 'shared:gps'
+include 'shared:rewards'
+include 'shared:web'
