@@ -57,16 +57,13 @@ public class TestRewardsController {
 	@Autowired
 	private RewardsService rewardsService;
 
-	private static boolean initialised = false;
-
 	@Before
 	public void initialise() {
-		if (!initialised) {
+		if (userService.getAllUsers().size() == 0) {
 			userService.initializeUsers(100);
 			rewardsService.initialiseUserMap();
 			Tracker tracker = new Tracker(rewardsService, userService);
 			tracker.creatingRewards();
-			initialised = true;
 		}
 	}
 
@@ -96,11 +93,16 @@ public class TestRewardsController {
 	public void getNearbyAttractions() throws Exception {
 		Optional<UserEntity> userEntity = userService.getUser("internalUser1");
 		if (userEntity.isPresent()) {
-			MvcResult result = mockMvc.perform(get("/getNearByAttractions").param("userName", "internalUser1")).andExpect(status().isOk()).andReturn();
+			UserEntity user = userEntity.get();
+			String uuid = user.getUserId().toString();
+			String userName = user.getUserName();
+			MvcResult result = mockMvc.perform(get("/getNearByAttractions").param("userName", userName)).andExpect(status().isOk()).andReturn();
 			String json = result.getResponse().getContentAsString();
-			VisitedLocationDTO visitedLocation = objectMapper.readValue(json, VisitedLocationDTO.class);
 				
-			assertEquals("Incorrect user", userEntity.get().getUserId(), visitedLocation.getUserId().toString());
+			assertNotEquals("There should be 1 user in userReward", 0, json.indexOf(uuid));
+		}
+		else {
+			fail("Missing user");
 		}
 	}
 	
