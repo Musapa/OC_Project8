@@ -1,17 +1,13 @@
 package com.openclassrooms.ocproject8.rewards.test;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,17 +21,11 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.jsoniter.output.JsonStream;
 import com.openclassrooms.ocproject8.rewards.RewardsApp;
 import com.openclassrooms.ocproject8.rewards.service.RewardsService;
 import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
 import com.openclassrooms.ocproject8.shared.domain.UserEntity;
-import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.service.UserService;
-
-import tripPricer.Provider;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RewardsApp.class)
@@ -47,9 +37,6 @@ public class TestRewardsController {
 
 	@Autowired
 	private WebApplicationContext webContext;
-
-	@Autowired
-	private ObjectMapper objectMapper;
 
 	@Autowired
 	private UserService userService;
