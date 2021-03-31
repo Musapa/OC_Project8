@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,6 +33,7 @@ import com.openclassrooms.ocproject8.shared.service.UserService;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GpsApp.class)
 @ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class TestGpsController {
 
@@ -44,14 +47,12 @@ public class TestGpsController {
 
 	@Autowired
 	private UserService userService;
-
-	private static boolean initialised = false;
+	
 
 	@Before
 	public void initialise() {
-		if (!initialised) {
+		if (userService.getAllUsers().size() == 0) {
 			userService.initializeUsers(100);
-			initialised = true;
 		}
 	}
 

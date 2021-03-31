@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase.Replace;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.DirtiesContext.ClassMode;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -30,6 +32,7 @@ import gpsUtil.location.VisitedLocation;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = RewardsApp.class)
 @ActiveProfiles("test")
+@DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class TestRewardsService {
 	
@@ -38,17 +41,14 @@ public class TestRewardsService {
 	
 	@Autowired
 	RewardsService rewardsService;
-	
-	private static boolean initialised = false;
 
 	@Before
 	public void initialise() {
-		if (!initialised) {
+		if (userService.getAllUsers().size() == 0) {
 			userService.initializeUsers(100);
 			rewardsService.initialiseUserMap();
 			Tracker tracker = new Tracker(rewardsService, userService);
 			tracker.creatingRewards();
-			//userService.deleteAll();
 		}
 	}
 	
@@ -74,13 +74,11 @@ public class TestRewardsService {
 	
 	@Test
 	public void nearAllAttractions() {
-		GpsUtil gpsUtil = new GpsUtil();
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 			
 		User user = rewardsService.getUser("internalUser1");
 		rewardsService.calculateRewards(user);
 		List<UserReward> userRewards = rewardsService.getUserRewards(user);
-		//assertEquals("Number of attractions does not match user rewards ", gpsUtil.getAttractions().size(), userRewards.size());
 		assertNotEquals("Incorrect number of rewards",userRewards.size(), 0);
 	}
 	
