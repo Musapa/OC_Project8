@@ -49,12 +49,10 @@ public class TestRewardsController {
 
 	@Before
 	public void initialise() {
-		if (userService.getAllUsers().size() == 0) {
 			userService.initializeUsers(100);
 			rewardsService.initialiseUserMap();
 			Tracker tracker = new Tracker(rewardsService, userService);
 			tracker.creatingRewards();
-		}
 	}
 
 	@Before

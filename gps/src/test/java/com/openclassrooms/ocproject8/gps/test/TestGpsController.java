@@ -47,13 +47,10 @@ public class TestGpsController {
 
 	@Autowired
 	private UserService userService;
-	
 
 	@Before
 	public void initialise() {
-		if (userService.getAllUsers().size() == 0) {
-			userService.initializeUsers(100);
-		}
+		userService.initializeUsers(100);
 	}
 
 	@Before
@@ -83,8 +80,10 @@ public class TestGpsController {
 	public void getAllLocations() throws Exception {
 		MvcResult result = mockMvc.perform(get("/getAllCurrentLocations")).andExpect(status().isOk()).andReturn();
 		String json = result.getResponse().getContentAsString();
-		List<VisitedLocationDTO> visitedLocationsDTO = objectMapper.readValue(json, new TypeReference<List<VisitedLocationDTO>>() {});
-		
+		List<VisitedLocationDTO> visitedLocationsDTO = objectMapper.readValue(json,
+				new TypeReference<List<VisitedLocationDTO>>() {
+				});
+
 		assertEquals("There should be 100 locations", 100, visitedLocationsDTO.size());
 	}
 }
