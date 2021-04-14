@@ -37,7 +37,7 @@ repositories {
 
 docker {
 	name "rewards"
-	dockerfile file('src/docker/Dockerfile')
+	dockerfile file('Dockerfile')
 	copySpec.from(jar).rename(".*","app.jar")
 	buildArgs(['JAR_FILE': "app.jar"])
 }
