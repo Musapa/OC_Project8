@@ -2,6 +2,7 @@ package com.openclassrooms.ocproject8.web.service;
 
 import java.util.List;
 
+import org.springframework.core.env.Environment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -13,7 +14,6 @@ import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.helper.InternalTestHelper;
 import com.openclassrooms.ocproject8.shared.service.UserService;
-import com.openclassrooms.ocproject8.web.controller.WebController;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
@@ -23,6 +23,9 @@ public class WebService {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Autowired
+	private Environment env;
 
 	private UserService userService;
 
@@ -40,7 +43,7 @@ public class WebService {
 
 	public VisitedLocation getUserLocation(String userName) throws Exception {
 		ResponseEntity<VisitedLocationDTO> response = restTemplate
-				.getForEntity(WebController.GPSURL + "/getLocation?userName=" + userName, VisitedLocationDTO.class);
+				.getForEntity(getGPSUrl() + "/getLocation?userName=" + userName, VisitedLocationDTO.class);
 		// TODO check response entity is not found
 		VisitedLocationDTO visitedLocationDTO = response.getBody();
 		Location location = new Location(visitedLocationDTO.getLocationDTO().getLatitude(),
@@ -50,26 +53,34 @@ public class WebService {
 	
 	public List<VisitedLocationDTO> getAllCurrentLocations() {
 		ResponseEntity<List<VisitedLocationDTO>> response = restTemplate
-				.exchange(WebController.GPSURL + "/getAllCurrentLocations", HttpMethod.GET, null,new ParameterizedTypeReference<List<VisitedLocationDTO>>() {});
+				.exchange(getGPSUrl() + "/getAllCurrentLocations", HttpMethod.GET, null,new ParameterizedTypeReference<List<VisitedLocationDTO>>() {});
 		return response.getBody();
 	}
 	
 	public String getUserRewards(String userName) {
 		ResponseEntity<String> response = restTemplate
-				.exchange(WebController.REWARDSURL + "/getRewards?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
+				.exchange(getRewardsUrl() + "/getRewards?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();
 	}
 	
 	public String getTripDeals(String userName) {
 		ResponseEntity<String> response = restTemplate
-				.exchange(WebController.REWARDSURL + "/getTripDeals?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
+				.exchange(getRewardsUrl() + "/getTripDeals?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();
 	}
 	
 	public String getNearByAttractions(String userName) {
 		ResponseEntity<String> response = restTemplate
-				.exchange(WebController.REWARDSURL + "/getNearByAttractions?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
+				.exchange(getRewardsUrl() + "/getNearByAttractions?userName=" + userName, HttpMethod.GET, null,new ParameterizedTypeReference<String>() {});
 		return response.getBody();
+	}
+	
+	private String getGPSUrl() {
+		return env.getProperty("GPS_URL");
+	}
+	
+	private String getRewardsUrl() {
+		return env.getProperty("REWARDS_URL");
 	}
 
 }

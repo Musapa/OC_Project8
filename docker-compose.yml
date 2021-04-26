@@ -1,0 +1,37 @@
+version: '2'
+
+services:
+  web:
+    image: 'web:latest'
+    build:
+      context: ./web
+    container_name: web
+    ports:
+      - 8080:8080
+    depends_on:
+      - gps
+      - rewards
+    environment:
+      - GPS_URL=http://gps:8090
+      - REWARDS_URL=http://localhost:8095 
+      - MYSQL_HOST=host.docker.internal
+      
+  gps:
+    image: 'gps:latest'
+    build:
+      context: ./gps
+    container_name: gps
+    ports:
+      - 8090:8090
+    environment:
+      - MYSQL_HOST=host.docker.internal
+
+  rewards:
+    image: 'rewards:latest'
+    build:
+      context: ./rewards
+    container_name: rewards
+    ports:
+      - 8095:8095
+    environment:
+      - MYSQL_HOST=host.docker.internal
