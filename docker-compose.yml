@@ -9,22 +9,23 @@ services:
     ports:
       - 8080:8080
     depends_on:
-      - gps
-      - rewards
+      - mysql
     environment:
       - GPS_URL=http://gps:8090
-      - REWARDS_URL=http://localhost:8095 
-      - MYSQL_HOST=host.docker.internal
+      - REWARDS_URL=http://rewards:8095 
+      - MYSQL_HOST=mysql
       
   gps:
     image: 'gps:latest'
     build:
       context: ./gps
     container_name: gps
+    depends_on:
+      - web
     ports:
       - 8090:8090
     environment:
-      - MYSQL_HOST=host.docker.internal
+      - MYSQL_HOST=mysql
 
   rewards:
     image: 'rewards:latest'
@@ -34,4 +35,17 @@ services:
     ports:
       - 8095:8095
     environment:
-      - MYSQL_HOST=host.docker.internal
+      - MYSQL_HOST=mysql
+      
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    ports:
+        - 3306:3306
+    command: --innodb --init-file /data/application/init.sql
+    volumes:
+        - ./init.sql:/data/application/init.sql
+    environment:
+        MYSQL_ROOT_USER: root
+        MYSQL_ROOT_PASSWORD: Musapa2104..
+        MYSQL_DATABASE: project_8

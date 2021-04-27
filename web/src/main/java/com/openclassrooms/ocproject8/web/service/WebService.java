@@ -14,6 +14,7 @@ import com.openclassrooms.ocproject8.shared.domain.UserEntity;
 import com.openclassrooms.ocproject8.shared.domain.VisitedLocationDTO;
 import com.openclassrooms.ocproject8.shared.helper.InternalTestHelper;
 import com.openclassrooms.ocproject8.shared.service.UserService;
+import com.openclassrooms.ocproject8.web.controller.WebController;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
@@ -76,11 +77,19 @@ public class WebService {
 	}
 	
 	private String getGPSUrl() {
-		return env.getProperty("GPS_URL");
+		String url = env.getProperty("GPS_URL");
+		if (url == null) {
+			url = WebController.GPSURL;
+		}
+		return url;
 	}
 	
 	private String getRewardsUrl() {
-		return env.getProperty("REWARDS_URL");
+		String url = env.getProperty("REWARDS_URL");
+		if (url == null) {
+			url = WebController.REWARDSURL;
+		}
+		return url;
 	}
 
 }
