@@ -34,7 +34,7 @@ class TrackerThread extends Thread {
 	public void run() {
 		this.tracker.creatingRewards();
 	}
-	
+
 }
 
 @Service
@@ -59,19 +59,26 @@ public class RewardsService {
 		this.userService = userService;
 		this.gpsUtil = new GpsUtil();
 		this.rewardsCentral = new RewardCentral();
-		this.initialiseUserMap();
 		this.tracker = new Tracker(this, userService);
 		new TrackerThread(this.tracker).start();
 	}
 
 	public User getUser(String userName) {
-		return userMap.get(userName);
+		User user = userMap.get(userName);
+		if (user == null) {
+			Optional<UserEntity> userEntity = userService.getUser(userName);
+			if (userEntity.isPresent()) {
+				user = new User(userEntity.get());
+				userMap.put(userName, user);
+			}
+		}
+		return user;
 	}
 
 	public List<UserReward> getUserRewards(User user) {
 		return user.getUserRewards();
 	}
-	
+
 	public VisitedLocation getUserLocation(String userName) {
 		Optional<UserEntity> userEntity = userService.getUser(userName);
 		if (userEntity.isPresent()) {
@@ -142,14 +149,6 @@ public class RewardsService {
 		double nauticalMiles = 60 * Math.toDegrees(angle);
 		double statuteMiles = STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;
 		return statuteMiles;
-	}
-
-	public void initialiseUserMap() {
-		for (UserEntity userEntity : userService.getAllUsers()) {
-			User user = new User(userEntity);
-
-			userMap.put(user.getUserName(), user);
-		}
 	}
 
 	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation) {

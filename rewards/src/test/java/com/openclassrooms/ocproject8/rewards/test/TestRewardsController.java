@@ -50,7 +50,6 @@ public class TestRewardsController {
 	@Before
 	public void initialise() {
 			userService.initializeUsers(100);
-			rewardsService.initialiseUserMap();
 			Tracker tracker = new Tracker(rewardsService, userService);
 			tracker.creatingRewards();
 	}

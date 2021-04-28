@@ -42,7 +42,6 @@ public class TestPerformance {
 	@Before
 	public void initializeUsers() {
 		userService.initializeUsers(1000);
-		rewardsService.initialiseUserMap();
 	}	
 	
 	@Test

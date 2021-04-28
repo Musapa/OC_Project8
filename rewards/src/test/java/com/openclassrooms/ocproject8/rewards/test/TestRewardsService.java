@@ -35,49 +35,48 @@ import gpsUtil.location.VisitedLocation;
 @DirtiesContext(classMode = ClassMode.BEFORE_EACH_TEST_METHOD)
 @AutoConfigureTestDatabase(replace = Replace.ANY)
 public class TestRewardsService {
-	
+
 	@Autowired
 	UserService userService;
-	
+
 	@Autowired
 	RewardsService rewardsService;
 
 	@Before
 	public void initialise() {
-			userService.initializeUsers(100);
-			rewardsService.initialiseUserMap();
-			Tracker tracker = new Tracker(rewardsService, userService);
-			tracker.creatingRewards();
+		userService.initializeUsers(100);
+		Tracker tracker = new Tracker(rewardsService, userService);
+		tracker.creatingRewards();
 	}
-	
+
 	@Test
 	public void userGetRewards() {
 		GpsUtil gpsUtil = new GpsUtil();
-		
+
 		User user = rewardsService.getUser("internalUser1");
-		
+
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		rewardsService.trackUserLocation(user);
 		List<UserReward> userRewards = user.getUserRewards();
 		assertTrue(userRewards.size() > 0);
 	}
-	
+
 	@Test
 	public void isWithinAttractionProximity() {
 		GpsUtil gpsUtil = new GpsUtil();
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}
-	
+
 	@Test
 	public void nearAllAttractions() {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-			
+
 		User user = rewardsService.getUser("internalUser1");
 		rewardsService.calculateRewards(user);
 		List<UserReward> userRewards = rewardsService.getUserRewards(user);
-		assertNotEquals("Incorrect number of rewards",userRewards.size(), 0);
+		assertNotEquals("Incorrect number of rewards", userRewards.size(), 0);
 	}
-	
+
 }
