@@ -31,7 +31,14 @@ class TrackerThread extends Thread {
 		this.tracker = tracker;
 	}
 
+
 	public void run() {
+		try {
+			Thread.currentThread();
+			Thread.sleep(1000*30);
+		} catch (InterruptedException e) {
+			
+		}
 		this.tracker.creatingRewards();
 	}
 

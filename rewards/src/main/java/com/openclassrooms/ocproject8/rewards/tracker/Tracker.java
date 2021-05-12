@@ -80,7 +80,7 @@ public class Tracker {
 		for (Future<VisitedLocation> future : list) {
 			try {
 				// print the return value of future, output delay in console because
-				// Future.get() waits for a task to be a complited
+				// Future.get() waits for a task to be a completed
 				visitedLocations.add(new VisitedLocationDTO(future.get()));
 
 			} catch (InterruptedException | ExecutionException e) {
