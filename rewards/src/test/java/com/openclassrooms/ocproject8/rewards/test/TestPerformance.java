@@ -41,7 +41,7 @@ public class TestPerformance {
 
 	@Before
 	public void initializeUsers() {
-		userService.initializeUsers(100000);
+		userService.initializeUsers(10000);
 	}	
 	
 	@Test

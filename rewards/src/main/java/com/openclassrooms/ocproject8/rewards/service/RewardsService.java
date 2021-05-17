@@ -7,6 +7,7 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.ocproject8.rewards.tracker.Tracker;
@@ -35,7 +36,7 @@ class TrackerThread extends Thread {
 	public void run() {
 		try {
 			Thread.currentThread();
-			Thread.sleep(1000*30);
+			Thread.sleep(1000);
 		} catch (InterruptedException e) {
 			
 		}
@@ -62,12 +63,14 @@ public class RewardsService {
 
 	private UserService userService;
 
-	public RewardsService(UserService userService) {
+	public RewardsService(UserService userService, Environment env) {
 		this.userService = userService;
 		this.gpsUtil = new GpsUtil();
 		this.rewardsCentral = new RewardCentral();
 		this.tracker = new Tracker(this, userService);
-		new TrackerThread(this.tracker).start();
+		if (env.getProperty("start.tracker").equals("true")) {
+			new TrackerThread(this.tracker).start();
+		}
 	}
 
 	public User getUser(String userName) {
