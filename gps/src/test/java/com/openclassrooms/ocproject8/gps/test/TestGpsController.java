@@ -50,7 +50,7 @@ public class TestGpsController {
 
 	@Before
 	public void initialise() {
-		userService.initializeUsers(100);
+		userService.initializeUsers(100000);
 	}
 
 	@Before
