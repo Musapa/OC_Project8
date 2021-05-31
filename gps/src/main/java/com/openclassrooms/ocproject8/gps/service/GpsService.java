@@ -68,7 +68,6 @@ public class GpsService {
 		return calculateAllUserLocations();
 	}
 
-	// we use visitedLocationDTO because VisitedLocation is not serializable
 	public List<VisitedLocationDTO> calculateAllUserLocations() {
 
 		List<VisitedLocationDTO> visitedLocations = new ArrayList<>();
@@ -99,19 +98,5 @@ public class GpsService {
 
 		return visitedLocations;
 	}
-
-	/*
-	  private double generateRandomLongitude() { double leftLimit = -180; double
-	  rightLimit = 180; return leftLimit + new Random().nextDouble() * (rightLimit
-	  - leftLimit); }
-	  
-	  private double generateRandomLatitude() { double leftLimit = -85.05112878;
-	  double rightLimit = 85.05112878; return leftLimit + new Random().nextDouble()
-	  (rightLimit - leftLimit); }
-	  
-	  private Date getRandomTime() { LocalDateTime localDateTime =
-	  LocalDateTime.now().minusDays(new Random().nextInt(30)); return
-	  Date.from(localDateTime.toInstant(ZoneOffset.UTC)); }
-	 */
 
 }

@@ -50,7 +50,6 @@ public class Tracker {
 	public Tracker(RewardsService rewardsService, UserService userService) {
 		this.rewardsService = rewardsService;
 		this.userService = userService;
-		//executorService.submit(this);
 	}
 	
 	/**
